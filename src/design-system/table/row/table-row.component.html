@@ -1,0 +1,14 @@
+<div class="flex flex-row items-center gap-2 w-full font-extralight bg-white shadow-md rounded-lg p-5 hover:bg-gray-50 cursor-pointer">
+  <div class="basis-1/4 truncate font-bold">
+    <p>{{ item().name }}</p>
+  </div>
+  <div class="basis-1/4 truncate">
+    <a [href]="'mailto:' + item().email">{{ item().email }}</a>
+  </div>
+  <div class="basis-1/4 truncate">
+    <a [href]="'tel:+' + item().phone">{{ item().phone }}</a>
+  </div>
+  <div class="basis-1/4 truncate">
+    <a class="text-app-blue hover:underline visited:text-app-bluish" [href]="'http://' + item().website" target="_blank">{{ item().website }}</a>
+  </div>
+</div>

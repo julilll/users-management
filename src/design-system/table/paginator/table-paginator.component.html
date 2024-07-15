@@ -1,0 +1,17 @@
+<div class="flex items-center">
+  <select class="me-2" id="number_of_items" (change)="changed($event)">
+    <option value="5" [selected]="_itemsPerPage() === 5">5</option>
+    <option value="10" [selected]="_itemsPerPage() === 10">10</option>
+    <option value="20" [selected]="_itemsPerPage() === 20">20</option>
+  </select>
+  <p class="flex-1">Items per page</p>
+  <button [disabled]="_currentPage() === 0" (click)="toTheStart()">
+    <app-icon name="first_page" [size]="32" [color]="_currentPage() === 0 ? 'grey': 'black'" /></button>
+  <button [disabled]="_currentPage() === 0" (click)="previousPage()">
+    <app-icon name="arrow_left" [size]="32" [color]="_currentPage() === 0 ? 'grey': 'black'" /></button>
+  <p>{{_currentPage() + 1}}</p>
+  <button [disabled]="_currentPage() === totalPages()" (click)="nextPage()">
+    <app-icon name="arrow_right" [size]="32" [color]="_currentPage() === totalPages() ? 'grey': 'black'" /></button>
+  <button [disabled]="_currentPage() === totalPages()" (click)="toTheEnd()">
+    <app-icon name="last_page" [size]="32" [color]="_currentPage() === totalPages() ? 'grey': 'black'" /></button>
+</div>

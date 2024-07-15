@@ -1,0 +1,8 @@
+input,
+textarea {
+  @apply w-full shadow-md p-2 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-thin rounded-lg;
+}
+
+label {
+  @apply block mb-2 font-semibold;
+}

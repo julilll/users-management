@@ -1,0 +1,51 @@
+@if (isOpen()) {
+<div class="fixed flex top-0 left-0 w-full h-full justify-end" (click)="closeModal()">
+  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-1/2 xl:w-2/5 bg-app-modal-bg shadow-xl px-7 sm:px-20 py-10 flex flex-col h-100" (click)="$event.stopPropagation()">
+    <div class="flex mb-10 justify-between">
+      <app-title [content]="newItem ? 'Create New' : 'Update'" size="large" />
+      <button (click)="closeModal()">
+        <app-icon name="close" [size]="32" class="fill-app-bluish" />
+      </button>
+    </div>
+    <form [formGroup]="form" class="flex-1 flex flex-col gap-3">
+      <div class="flex gap-3">
+        <div class="flex-1">
+          <label for="name">Name</label>
+          <input id="name" formControlName="name" [ngClass]="{'border-red-500 bg-red-100': form.get('name')?.invalid && form.get('name')?.touched}" placeholder="Enter a name">
+          <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('name')}"></ng-container>
+        </div>
+        <div class="flex-1">
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" formControlName="email" [ngClass]="{'border-red-500 bg-red-100': form.get('email')?.invalid && form.get('email')?.touched}" placeholder="Type the email...">
+          <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('email')}"></ng-container>
+        </div>
+      </div>
+      <div>
+        <label for="phone">Phone</label>
+        <input id="phone" formControlName="phone" [ngClass]="{'border-red-500 bg-red-100': form.get('phone')?.invalid && form.get('phone')?.touched}" placeholder="Enter phone number">
+        <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('phone')}"></ng-container>
+      </div>
+      <div>
+        <label for="website">Website</label>
+        <input id="website" formControlName="website" [ngClass]="{'border-red-500 bg-red-100': form.get('website')?.invalid && form.get('website')?.touched}" placeholder="Enter a website">
+        <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('website')}"></ng-container>
+      </div>
+      <div class="flex justify-between mt-auto">
+        <app-button content="cancel" (click)="closeModal()"/>
+        <app-button type="submit" content="save" icon="save" color="green" (click)="onSubmit()" [disabled]="form.invalid"/>
+        @if (!newItem) {
+          <app-button content="delete" icon="delete" color="red" (click)="deleteProduct()"/>
+        }
+      </div>
+    </form>
+  </div>
+</div>
+}
+
+
+<ng-template #errorTemplate let-control="control">
+  <div *ngIf="control.invalid && control.touched" class="text-red-600 text-sm mt-1">
+    <div *ngIf="control.errors?.['required']">This field is required</div>
+    <div *ngIf="control.errors?.['pattern']">Invalid format</div>
+  </div>
+</ng-template>

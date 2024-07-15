@@ -1,0 +1,5 @@
+<app-table-header class="mb-3 block"/>
+@for (item of items(); track item) {
+  <app-table-row [item]="item" class="mb-3 block" (dblclick)="updateItem.emit(item)"/>
+}
+<app-table-paginator/>

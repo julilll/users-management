@@ -1,0 +1,14 @@
+<div class="shadow-md flex flex-col h-full bg-white hover:bg-gray-50 cursor-pointer items-start">
+  <div class="p-3 bg-app-modal-bg flex items-center justify-center self-stretch">
+    <p class="text-center font-bold">{{ item().name }}</p>
+  </div>
+  <p></p>
+  <div class="flex flex-col gap-3 p-3 truncate">
+    <p class="font-bold">Email</p>
+    <a [href]="'mailto:' + item().email">{{ item().email }}</a>
+    <p class="font-bold">Phone</p>
+    <a [href]="'tel:+' + item().phone">{{ item().phone }}</a>
+    <p class="font-bold">Website</p>
+    <a class="text-app-blue hover:underline visited:text-app-bluish" [href]="'http://' + item().website" target="_blank">{{ item().website }}</a>
+  </div>
+</div>

@@ -1,27 +1,50 @@
-# UsersManagement
+# Management tool
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.8.
+## Overview
 
-## Development server
+The Management Tool is a project designed to present and manipulate with a list of users. It includes features such as add new item, update existing item, delete item, sort, filter and pagination, change view.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+- Fetch data from server.
+- Show the data as a list of items.
+- Show the data as a grid of cards.
+- Sort data by name or email.
+- Filter data by typing in search field.
+- Add new item.
+- Edit existing item.
+- Delete existing item.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Stack
 
-## Build
+- Angular 18 - standalone
+- NGRX signal store
+- Storybook 8
+- Tailwind css
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Setup and Installation
 
-## Running unit tests
+1. **Clone the repository**
+    ```bash
+    git clone https://github.com/julilll/users-management.git
+    cd users-management
+    ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-## Running end-to-end tests
+3. **Run the project**
+    ```bash
+    npm start
+    ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+4. **Run Storybook project**
+    ```bash
+    npm run storybook
+    ```
 
-## Further help
+## License
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+This project is licensed under the MIT License.

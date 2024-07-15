@@ -1,0 +1,39 @@
+<div class="flex mb-7 items-center gap-3">
+  <app-title class="flex-1" size="large" content="User management" />
+  <button (click)="changeView('grid')">
+    <app-icon
+      name="grid_view"
+      [size]="32"
+      [ngClass]="{
+        'fill-app-grey-basic': _view() === 'list',
+        'hover:fill-app-bluish': true,
+        'fill-app-blue': _view() === 'grid' }"
+      />
+  </button>
+  <button (click)="changeView('list')">
+    <app-icon
+      name="list_view"
+      [size]="32"
+      [ngClass]="{
+        'fill-app-grey-basic': _view() === 'grid',
+        'hover:fill-app-bluish': true,
+        'fill-app-blue': _view() === 'list' }"
+      />
+  </button>
+  <button (click)="createItem()">
+    <app-icon name="add" class="fill-app-grey-basic hover:fill-app-bluish" [size]="42" />
+  </button>
+</div>
+<div class="block relative">
+  <app-search-input id="searchbar" placeholder="Find by name..." class="mb-7" [value]="_filter()" (valueUpdated)="filterItems($event)" prefix="search" />
+</div>
+@if (store.isLoading()) {
+<p>Loading...</p>
+} @else {
+  @if (_view() === 'list') {
+    <app-table [items]="store.processedUsers()" (updateItem)="updateItem($event)"/>
+  } @else {
+    <app-tiles [items]="store.processedUsers()" (updateItem)="updateItem($event)"/>
+  }
+}
+<app-modal (formSubmit)="handleFormSubmit($event)" (productToDelete)="hangleProductToDelete($event)"/>

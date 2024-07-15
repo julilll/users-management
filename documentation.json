@@ -1,0 +1,3582 @@
+{
+    "pipes": [],
+    "interfaces": [
+        {
+            "name": "AppTitle",
+            "id": "interface-AppTitle-cccdab0f6676c907fe4762cd56e36d3c95f40c48d96432b94e9553329f1081f80e1922a25cc410df805e6e6d1e05f7fb9d354134d351ea5ab3dcdcfdd815228a",
+            "file": "src/design-system/title/title.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\n\nexport interface AppTitle {\n  size: 'small' | 'large';\n  content: string;\n}\n\n@Component({\n  selector: 'app-title',\n  template: `\n    <p [class]=\"getClasses()\">{{content()}}</p>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class AppTitleComponent {\n  public size = input.required<AppTitle['size']>();\n  public content = input.required<AppTitle['content']>();\n\n  private textSize = computed(() => this.textSizes[this.size()]);\n\n  protected getClasses(): string {\n    return `${this.textSize()} text-app-bluish`\n  }\n\n  private textSizes: Record<AppTitle['size'], string> = {\n    small: 'font-medium',\n    large: 'text-2xl font-bold'\n  };\n}\n",
+            "properties": [
+                {
+                    "name": "content",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 5
+                },
+                {
+                    "name": "size",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "\"small\" | \"large\"",
+                    "optional": false,
+                    "description": "",
+                    "line": 4
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "Button",
+            "id": "interface-Button-1ee8125bf70b13d3b121a8e616c03320a1bbd93dac89a3ac78e765f1c9d7dd86c40dc59d5046632ffabb82654887bef016e6855604db228ed743c35224ff89dd",
+            "file": "src/design-system/button/button.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, ViewChild, computed, input } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass, UpperCasePipe } from '@angular/common';\nimport { IconName } from 'design-system/icon/icon.interface';\n\nexport interface Button {\n  type?: string;\n  color?: string;\n  content?: string;\n  icon?: IconName;\n}\n\n@Component({\n  selector: 'app-button',\n  template: `\n    <button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"_color()\">\n      @if (icon()) {\n        <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()\"/>\n        }\n      <p [ngClass]=\"_color()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n    </button>\n  `,\n  imports: [IconComponent, NgClass, UpperCasePipe],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true\n})\nexport class ButtonComponent {\n  public color = input<Button['color']>();\n  public type = input<Button['type']>();\n  public content = input<Button['content']>();\n  public icon = input<Button['icon']>();\n  protected _color = computed(() => this.color());\n\n  protected buttonClasses(): string {\n    return `py-3 px-10 border-2 flex items-center gap-2`\n  }\n\n  protected iconClasses(): string {\n    return this.color() ? \"fill-white\": \"fill-app-font-color\"\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "color",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": true,
+                    "description": "",
+                    "line": 8
+                },
+                {
+                    "name": "content",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": true,
+                    "description": "",
+                    "line": 9
+                },
+                {
+                    "name": "icon",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IconName",
+                    "optional": true,
+                    "description": "",
+                    "line": 10
+                },
+                {
+                    "name": "type",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": true,
+                    "description": "",
+                    "line": 7
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "Icon",
+            "id": "interface-Icon-30b6a1833f925049276137534ef7812651206474c5ed5fb943e014469a02411251fef01c1d9a919aa4f46c57b52e795f61955a1e707474c3ecbed0022c808800",
+            "file": "src/design-system/icon/icon.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\nimport { type IconName, icons } from './icon.interface';\n\nexport interface Icon {\n  color?: string;\n  size: number;\n  name?: IconName;\n}\n\n@Component({\n  selector: 'app-icon',\n  template: `\n    <svg viewBox=\"0 -960 960 960\">\n      @for (path of paths(); track $index) {\n        <path [attr.d]=\"path.d\"></path>\n      }\n    </svg>\n  `,\n  styles: `\n    :host {\n      display: flex;\n    }\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.fill]': 'color()',\n    '[style.width]': 'size() + \"px\"',\n    '[style.height]': 'size() + \"px\"',\n  }\n})\nexport class IconComponent {\n  public color = input<Icon['color']>();\n  public size = input.required<Icon['size']>();\n  public name = input.required<Icon['name']>();\n\n  protected paths = computed(() => icons.find(({name}) => name === this.name())?.paths);\n}\n",
+            "properties": [
+                {
+                    "name": "color",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": true,
+                    "description": "",
+                    "line": 5
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IconName",
+                    "optional": true,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "size",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "InputField",
+            "id": "interface-InputField-0b6cb35fd9eb9ddd8b5f269bd858acb51a455c0bd498ad88c1b303d0cbd6e0b7eb88d3fce48ecf6fabc65bf55c1bd897196dd44eaed22428d20d7a38a0db469d",
+            "file": "src/design-system/input-field/input-field.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, model, input, output } from '@angular/core';\nimport { FormsModule } from '@angular/forms';\nimport { IconName } from 'design-system/icon/icon.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass } from '@angular/common';\n\nexport interface InputField {\n  value: string;\n  prefix?: IconName;\n  label?: string;\n  id: string;\n  placeholder?: string;\n}\n\n@Component({\n  selector: 'app-input-field',\n  template: `\n    <div class=\"block relative\">\n      <label ></label>\n      @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n      <input\n        [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n        [id]=\"id()\"\n        [name]=\"id()\"\n        [placeholder]=\"placeholder()\"\n        [(ngModel)]=\"value\"\n        (keyup)=\"valueUpdatedEvent()\"/>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [FormsModule, IconComponent, NgClass],\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class InputFieldComponent {\n  public value = model('');\n  public prefix = input<InputField['prefix']>();\n  public id = input.required<InputField['id']>();\n  public placeholder = input<InputField['placeholder']>('');\n  public valueUpdated = output<InputField['value']>();\n\n  valueUpdatedEvent(): void {\n    this.valueUpdated.emit(this.value())\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 11
+                },
+                {
+                    "name": "label",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": true,
+                    "description": "",
+                    "line": 10
+                },
+                {
+                    "name": "placeholder",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": true,
+                    "description": "",
+                    "line": 12
+                },
+                {
+                    "name": "prefix",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IconName",
+                    "optional": true,
+                    "description": "",
+                    "line": 9
+                },
+                {
+                    "name": "value",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "Modal",
+            "id": "interface-Modal-60a1fd37bf1cf05d26a594933921ec5478ede2ff51aeb3905fa60a5c1272d5a1138db79ac8ed64fc8539e83700ee156ec94e2dc39eef80d3b8150380b254a761",
+            "file": "src/design-system/modal/modal.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { Component, model, output } from '@angular/core';\nimport { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';\nimport { CommonModule } from '@angular/common';\nimport { ReactiveFormsModule } from '@angular/forms';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { ButtonComponent } from 'design-system/button/button.component';\nimport type { User } from 'shared/db-models.interface';\n\nconst initialItem: User = {\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n};\n\nexport interface Modal {\n  isOpen: boolean;\n  form: User;\n}\n\n@Component({\n  selector: 'app-modal',\n  templateUrl: 'modal.component.html',\n  styleUrl: 'modal.component.scss',\n  standalone: true,\n  imports: [CommonModule, ReactiveFormsModule, AppTitleComponent, IconComponent, ButtonComponent]\n})\n\nexport class ModalComponent {\n  public isOpen = model<Modal['isOpen']>(false);\n  public formSubmit = output<User>();\n  public productToDelete = output<User['id']>();\n  public form!: FormGroup;\n\n  public newItem: boolean = true;\n  public item: User = initialItem;\n\n  constructor(private fb: FormBuilder) {\n    this.form = this.fb.group({\n      name: new FormControl('', Validators.required),\n      email: new FormControl('',Validators.required),\n      phone: new FormControl('',Validators.required),\n      website: new FormControl('',Validators.required)\n    });\n  }\n\n  openModal(initialValues?: User) {\n    if (initialValues) {\n      this.item = initialValues;\n      this.newItem = false;\n      this.form.setValue({ name: initialValues.name, email: initialValues.email, phone: initialValues.phone, website: initialValues.website });\n    }\n    this.isOpen.set(true);\n  }\n\n  closeModal() {\n    this.form.reset({ name: '', email: '', phone: '', website: ''});\n    this.newItem = true;\n    this.item = initialItem;\n    this.isOpen.set(false);\n  }\n\n  onSubmit() {\n    if (this.form.valid) {\n      this.formSubmit.emit({...this.item, ...this.form.value});\n      this.closeModal();\n    }\n  }\n\n  deleteProduct() {\n    this.productToDelete.emit(this.item.id)\n    this.closeModal();\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "form",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "isOpen",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "Table",
+            "id": "interface-Table-3dfbe6f45bad76aef9bfd5e0e5e4e329d08da01e0fabd0c664f4124c2ddeaef1b2ff375ebf4421ccce1121a501b7a8cdbe2a63fc2c12c7990162fa16f81a9ba2",
+            "file": "src/design-system/table/table.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TableHeaderComponent } from './header/table-header.component';\nimport { TableRowComponent } from './row/table-row.component';\nimport { TablePaginatorComponent } from './paginator/table-pagination.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-table',\n  templateUrl: 'table.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TableHeaderComponent, TableRowComponent, TablePaginatorComponent],\n  standalone: true\n})\nexport class TableComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "properties": [
+                {
+                    "name": "items",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User[]",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "Table",
+            "id": "interface-Table-c6617c3a57afe2ecc0d1ac144125d3d7242dd684829585e4bf6e4fbaf70bcc1cdbf18c8a5ebedc01c208f1753ff60ca5d1b43606850b2b6a93fe43e5f422352e-1",
+            "file": "src/design-system/tiles/tiles.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TablePaginatorComponent } from '../table/paginator/table-pagination.component';\nimport { TileCardComponent } from './tile-card/tile-card.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-tiles',\n  templateUrl: 'tiles.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TablePaginatorComponent, TileCardComponent],\n  standalone: true\n})\nexport class TilesComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "properties": [
+                {
+                    "name": "items",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User[]",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "Table-1"
+        },
+        {
+            "name": "TableRow",
+            "id": "interface-TableRow-2024100fea08c74ded4b02839759518ddf437eac018d838d92fd81938478f862daabc9afb262c76df2bfb225ca4223749b96dd290aad389eb19b1ac9fd2d4409",
+            "file": "src/design-system/table/row/table-row.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input } from '@angular/core';\nimport { DatePipe } from '@angular/common';\nimport type { User } from 'shared/db-models.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\n\nexport interface TableRow {\n  item: User;\n}\n\n@Component({\n  selector: 'app-table-row',\n  templateUrl: 'table-row.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [DatePipe, IconComponent],\n  standalone: true\n})\nexport class TableRowComponent {\n  public item = input.required<TableRow['item']>();\n}\n",
+            "properties": [
+                {
+                    "name": "item",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "TileCard",
+            "id": "interface-TileCard-a288bba38d75a4031d28dd2a77972a3e57582c88a0ed58386fc9e5fa5b1bc3a5896ace674974f12c0f4f16d345f1f351b63a6d51e84bde674cee20eb9624938b",
+            "file": "src/design-system/tiles/tile-card/tile-card.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input } from '@angular/core';\nimport type { User } from 'shared/db-models.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\n\nexport interface TileCard {\n  item: User;\n}\n\n@Component({\n  selector: 'app-tile-card',\n  templateUrl: 'tile-card.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true,\n  host: {\n    '[style.display]': '\"inline-block\"'\n  }})\nexport class TileCardComponent {\n  public item = input.required<TileCard['item']>();\n}\n",
+            "properties": [
+                {
+                    "name": "item",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "User",
+            "id": "interface-User-e28da0cfd8181ed6aa2033e751b067a853a28dc0e93970817f63b9938310c47ac1d6528dc121b0222e4d6e77d0e0b4b2d14f0e3956127d3cf2002be7a6d1b0de",
+            "file": "src/shared/db-models.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface User {\n  id?: number | undefined,\n  name: string,\n  username?: string | undefined,\n  email: string,\n  address?: {\n    street: string,\n    suite: string,\n    city: string,\n    zipcode: string,\n    geo: {\n      lat: string,\n      lng: string\n    }\n  } | undefined\n  phone: string,\n  website: string,\n  company?: {\n    name: string,\n    catchPhrase: string,\n    bs: string\n  } | undefined\n}\n\nexport type ViewMode = 'list' | 'grid';\n",
+            "properties": [
+                {
+                    "name": "address",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "literal type | undefined",
+                    "optional": true,
+                    "description": "",
+                    "line": 6
+                },
+                {
+                    "name": "company",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "literal type | undefined",
+                    "optional": true,
+                    "description": "",
+                    "line": 18
+                },
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 5
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number | undefined",
+                    "optional": true,
+                    "description": "",
+                    "line": 2
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 3
+                },
+                {
+                    "name": "phone",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                },
+                {
+                    "name": "username",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | undefined",
+                    "optional": true,
+                    "description": "",
+                    "line": 4
+                },
+                {
+                    "name": "website",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        }
+    ],
+    "injectables": [
+        {
+            "name": "HttpService",
+            "id": "injectable-HttpService-e12d319ec2ac6bf15affcc0c1ea116435a66be63803b937585d12b31e1704703a98643b00dfc64822cc0e413a07613e64405a5434a42edd28dceceda6dfceb86",
+            "file": "src/services/http.service.ts",
+            "properties": [
+                {
+                    "name": "apiUrl",
+                    "defaultValue": "'https://jsonplaceholder.typicode.com'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 10,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "usersApi",
+                    "defaultValue": "this.apiUrl + '/users'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 11,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methods": [
+                {
+                    "name": "getUsers",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "Observable<User[]>",
+                    "typeParameters": [],
+                    "line": 15,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\nimport { HttpClient } from '@angular/common/http';\nimport { Observable, catchError } from 'rxjs';\nimport type { User } from 'shared/db-models.interface';\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class HttpService {\n  private apiUrl = 'https://jsonplaceholder.typicode.com';\n  private usersApi = this.apiUrl + '/users';\n\n  constructor(private http: HttpClient) {}\n\n  getUsers(): Observable<User[]> {\n    return this.http.get<User[]>(this.usersApi).pipe(catchError((error: any) => {throw error.message}))\n  }\n}\n",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [
+                    {
+                        "name": "http",
+                        "type": "HttpClient",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "line": 11,
+                "jsdoctags": [
+                    {
+                        "name": "http",
+                        "type": "HttpClient",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            "extends": [],
+            "type": "injectable"
+        }
+    ],
+    "guards": [],
+    "interceptors": [],
+    "classes": [],
+    "directives": [],
+    "components": [
+        {
+            "name": "AppComponent",
+            "id": "component-AppComponent-861eb6005ef8defd5ff69ad01ecbae15381379d55e6af13c382a264209eb0ac62e63ad7575275fb46aa7d8d6a3f5db4e821b7b8ad4820b51a8286d4cf40e1ba8",
+            "file": "src/app/app.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-root",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./app.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "title",
+                    "defaultValue": "'users-management'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "RouterOutlet"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  standalone: true,\r\n  imports: [RouterOutlet],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss'\r\n})\r\nexport class AppComponent {\r\n  title = 'users-management';\r\n}\r\n",
+            "styleUrl": "./app.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"2xl:p-24 xl:p-16 lg:p-12 md:p-8 sm:p-6 p-2\">\r\n  <router-outlet />\r\n</div>\r\n"
+        },
+        {
+            "name": "AppTitleComponent",
+            "id": "component-AppTitleComponent-cccdab0f6676c907fe4762cd56e36d3c95f40c48d96432b94e9553329f1081f80e1922a25cc410df805e6e6d1e05f7fb9d354134d351ea5ab3dcdcfdd815228a",
+            "file": "src/design-system/title/title.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "host": {},
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-title",
+            "styleUrls": [],
+            "styles": [],
+            "template": "<p [class]=\"getClasses()\">{{content()}}</p>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "content",
+                    "defaultValue": "input.required<AppTitle['content']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "size",
+                    "defaultValue": "input.required<AppTitle['size']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "textSize",
+                    "defaultValue": "computed(() => this.textSizes[this.size()])",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 23,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "textSizes",
+                    "defaultValue": "{\n    small: 'font-medium',\n    large: 'text-2xl font-bold'\n  }",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Record< | string>",
+                    "optional": false,
+                    "description": "",
+                    "line": 29,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "getClasses",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 25,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\n\nexport interface AppTitle {\n  size: 'small' | 'large';\n  content: string;\n}\n\n@Component({\n  selector: 'app-title',\n  template: `\n    <p [class]=\"getClasses()\">{{content()}}</p>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class AppTitleComponent {\n  public size = input.required<AppTitle['size']>();\n  public content = input.required<AppTitle['content']>();\n\n  private textSize = computed(() => this.textSizes[this.size()]);\n\n  protected getClasses(): string {\n    return `${this.textSize()} text-app-bluish`\n  }\n\n  private textSizes: Record<AppTitle['size'], string> = {\n    small: 'font-medium',\n    large: 'text-2xl font-bold'\n  };\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "ButtonComponent",
+            "id": "component-ButtonComponent-1ee8125bf70b13d3b121a8e616c03320a1bbd93dac89a3ac78e765f1c9d7dd86c40dc59d5046632ffabb82654887bef016e6855604db228ed743c35224ff89dd",
+            "file": "src/design-system/button/button.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-button",
+            "styleUrls": [],
+            "styles": [],
+            "template": "<button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"_color()\">\n  @if (icon()) {\n    <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()\"/>\n    }\n  <p [ngClass]=\"_color()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n</button>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "_color",
+                    "defaultValue": "computed(() => this.color())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 32,
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "color",
+                    "defaultValue": "input<Button['color']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 28,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "content",
+                    "defaultValue": "input<Button['content']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 30,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "icon",
+                    "defaultValue": "input<Button['icon']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 31,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "type",
+                    "defaultValue": "input<Button['type']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 29,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "buttonClasses",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 34,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "iconClasses",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 38,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "NgClass"
+                },
+                {
+                    "name": "UpperCasePipe",
+                    "type": "pipe"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, ViewChild, computed, input } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass, UpperCasePipe } from '@angular/common';\nimport { IconName } from 'design-system/icon/icon.interface';\n\nexport interface Button {\n  type?: string;\n  color?: string;\n  content?: string;\n  icon?: IconName;\n}\n\n@Component({\n  selector: 'app-button',\n  template: `\n    <button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"_color()\">\n      @if (icon()) {\n        <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()\"/>\n        }\n      <p [ngClass]=\"_color()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n    </button>\n  `,\n  imports: [IconComponent, NgClass, UpperCasePipe],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true\n})\nexport class ButtonComponent {\n  public color = input<Button['color']>();\n  public type = input<Button['type']>();\n  public content = input<Button['content']>();\n  public icon = input<Button['icon']>();\n  protected _color = computed(() => this.color());\n\n  protected buttonClasses(): string {\n    return `py-3 px-10 border-2 flex items-center gap-2`\n  }\n\n  protected iconClasses(): string {\n    return this.color() ? \"fill-white\": \"fill-app-font-color\"\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "IconComponent",
+            "id": "component-IconComponent-30b6a1833f925049276137534ef7812651206474c5ed5fb943e014469a02411251fef01c1d9a919aa4f46c57b52e795f61955a1e707474c3ecbed0022c808800",
+            "file": "src/design-system/icon/icon.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "host": {},
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-icon",
+            "styleUrls": [],
+            "styles": [
+                "\n    :host {\n      display: flex;\n    }\n  "
+            ],
+            "template": "<svg viewBox=\"0 -960 960 960\">\n  @for (path of paths(); track $index) {\n    <path [attr.d]=\"path.d\"></path>\n  }\n</svg>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "color",
+                    "defaultValue": "input<Icon['color']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 33,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "name",
+                    "defaultValue": "input.required<Icon['name']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 35,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "paths",
+                    "defaultValue": "computed(() => icons.find(({name}) => name === this.name())?.paths)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 37,
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "size",
+                    "defaultValue": "input.required<Icon['size']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 34,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\nimport { type IconName, icons } from './icon.interface';\n\nexport interface Icon {\n  color?: string;\n  size: number;\n  name?: IconName;\n}\n\n@Component({\n  selector: 'app-icon',\n  template: `\n    <svg viewBox=\"0 -960 960 960\">\n      @for (path of paths(); track $index) {\n        <path [attr.d]=\"path.d\"></path>\n      }\n    </svg>\n  `,\n  styles: `\n    :host {\n      display: flex;\n    }\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.fill]': 'color()',\n    '[style.width]': 'size() + \"px\"',\n    '[style.height]': 'size() + \"px\"',\n  }\n})\nexport class IconComponent {\n  public color = input<Icon['color']>();\n  public size = input.required<Icon['size']>();\n  public name = input.required<Icon['name']>();\n\n  protected paths = computed(() => icons.find(({name}) => name === this.name())?.paths);\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "\n    :host {\n      display: flex;\n    }\n  \n",
+            "extends": []
+        },
+        {
+            "name": "InputFieldComponent",
+            "id": "component-InputFieldComponent-0b6cb35fd9eb9ddd8b5f269bd858acb51a455c0bd498ad88c1b303d0cbd6e0b7eb88d3fce48ecf6fabc65bf55c1bd897196dd44eaed22428d20d7a38a0db469d",
+            "file": "src/design-system/input-field/input-field.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "host": {},
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-input-field",
+            "styleUrls": [],
+            "styles": [],
+            "template": "<div class=\"block relative\">\n  <label ></label>\n  @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n  <input\n    [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n    [id]=\"id()\"\n    [name]=\"id()\"\n    [placeholder]=\"placeholder()\"\n    [(ngModel)]=\"value\"\n    (keyup)=\"valueUpdatedEvent()\"/>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "id",
+                    "defaultValue": "input.required<InputField['id']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 40,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "placeholder",
+                    "defaultValue": "input<InputField['placeholder']>('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 41,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "prefix",
+                    "defaultValue": "input<InputField['prefix']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 39,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "model('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 38,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "valueUpdated",
+                    "defaultValue": "output<InputField['value']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 42,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "valueUpdatedEvent",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 44,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "NgClass"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, model, input, output } from '@angular/core';\nimport { FormsModule } from '@angular/forms';\nimport { IconName } from 'design-system/icon/icon.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass } from '@angular/common';\n\nexport interface InputField {\n  value: string;\n  prefix?: IconName;\n  label?: string;\n  id: string;\n  placeholder?: string;\n}\n\n@Component({\n  selector: 'app-input-field',\n  template: `\n    <div class=\"block relative\">\n      <label ></label>\n      @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n      <input\n        [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n        [id]=\"id()\"\n        [name]=\"id()\"\n        [placeholder]=\"placeholder()\"\n        [(ngModel)]=\"value\"\n        (keyup)=\"valueUpdatedEvent()\"/>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [FormsModule, IconComponent, NgClass],\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class InputFieldComponent {\n  public value = model('');\n  public prefix = input<InputField['prefix']>();\n  public id = input.required<InputField['id']>();\n  public placeholder = input<InputField['placeholder']>('');\n  public valueUpdated = output<InputField['value']>();\n\n  valueUpdatedEvent(): void {\n    this.valueUpdated.emit(this.value())\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "ModalComponent",
+            "id": "component-ModalComponent-60a1fd37bf1cf05d26a594933921ec5478ede2ff51aeb3905fa60a5c1272d5a1138db79ac8ed64fc8539e83700ee156ec94e2dc39eef80d3b8150380b254a761",
+            "file": "src/design-system/modal/modal.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-modal",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "modal.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [
+                {
+                    "name": "formSubmit",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 32,
+                    "modifierKind": [
+                        125
+                    ],
+                    "required": false
+                }
+            ],
+            "propertiesClass": [
+                {
+                    "name": "form",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FormGroup",
+                    "optional": false,
+                    "description": "",
+                    "line": 34,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "formSubmit",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 32,
+                    "modifierKind": [
+                        125
+                    ],
+                    "required": false
+                },
+                {
+                    "name": "isOpen",
+                    "defaultValue": "model<Modal['isOpen']>(false)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 31,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "item",
+                    "defaultValue": "initialItem",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "optional": false,
+                    "description": "",
+                    "line": 37,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "newItem",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "optional": false,
+                    "description": "",
+                    "line": 36,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "productToDelete",
+                    "defaultValue": "output<User['id']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 33,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "closeModal",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 57,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "deleteProduct",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 71,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "onSubmit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 64,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "openModal",
+                    "args": [
+                        {
+                            "name": "initialValues",
+                            "type": "User",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "optional": true
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 48,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "initialValues",
+                            "type": "User",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "optional": true,
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ReactiveFormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "AppTitleComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "ButtonComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, model, output } from '@angular/core';\nimport { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';\nimport { CommonModule } from '@angular/common';\nimport { ReactiveFormsModule } from '@angular/forms';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { ButtonComponent } from 'design-system/button/button.component';\nimport type { User } from 'shared/db-models.interface';\n\nconst initialItem: User = {\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n};\n\nexport interface Modal {\n  isOpen: boolean;\n  form: User;\n}\n\n@Component({\n  selector: 'app-modal',\n  templateUrl: 'modal.component.html',\n  styleUrl: 'modal.component.scss',\n  standalone: true,\n  imports: [CommonModule, ReactiveFormsModule, AppTitleComponent, IconComponent, ButtonComponent]\n})\n\nexport class ModalComponent {\n  public isOpen = model<Modal['isOpen']>(false);\n  public formSubmit = output<User>();\n  public productToDelete = output<User['id']>();\n  public form!: FormGroup;\n\n  public newItem: boolean = true;\n  public item: User = initialItem;\n\n  constructor(private fb: FormBuilder) {\n    this.form = this.fb.group({\n      name: new FormControl('', Validators.required),\n      email: new FormControl('',Validators.required),\n      phone: new FormControl('',Validators.required),\n      website: new FormControl('',Validators.required)\n    });\n  }\n\n  openModal(initialValues?: User) {\n    if (initialValues) {\n      this.item = initialValues;\n      this.newItem = false;\n      this.form.setValue({ name: initialValues.name, email: initialValues.email, phone: initialValues.phone, website: initialValues.website });\n    }\n    this.isOpen.set(true);\n  }\n\n  closeModal() {\n    this.form.reset({ name: '', email: '', phone: '', website: ''});\n    this.newItem = true;\n    this.item = initialItem;\n    this.isOpen.set(false);\n  }\n\n  onSubmit() {\n    if (this.form.valid) {\n      this.formSubmit.emit({...this.item, ...this.form.value});\n      this.closeModal();\n    }\n  }\n\n  deleteProduct() {\n    this.productToDelete.emit(this.item.id)\n    this.closeModal();\n  }\n}\n",
+            "styleUrl": "modal.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [
+                    {
+                        "name": "fb",
+                        "type": "FormBuilder",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "line": 37,
+                "jsdoctags": [
+                    {
+                        "name": "fb",
+                        "type": "FormBuilder",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            "extends": [],
+            "templateData": "@if (isOpen()) {\n<div class=\"fixed flex top-0 left-0 w-full h-full justify-end\" (click)=\"closeModal()\">\n  <div class=\"w-2/5 bg-app-modal-bg shadow-xl px-20 py-10 flex flex-col h-100\" (click)=\"$event.stopPropagation()\">\n    <div class=\"flex mb-10 justify-between\">\n      <app-title [content]=\"newItem ? 'Create New' : 'Update'\" size=\"large\" />\n      <button (click)=\"closeModal()\">\n        <app-icon name=\"close\" [size]=\"32\" class=\"fill-app-bluish\" />\n      </button>\n    </div>\n    <form [formGroup]=\"form\" class=\"flex-1 flex flex-col gap-3\">\n      <div class=\"flex gap-3\">\n        <div class=\"flex-1\">\n          <label for=\"name\">Name</label>\n          <input #autofocus id=\"name\" type=\"text\" name=\"name\" formControlName=\"name\" placeholder=\"Type the name...\">\n        </div>\n        <div class=\"flex-1\">\n          <label for=\"email\">Email</label>\n          <input id=\"email\" type=\"number\" name=\"email\" formControlName=\"email\" placeholder=\"Type the price\">\n        </div>\n      </div>\n      <div>\n        <label for=\"phone\">Phone</label>\n        <input class=\"w-10 h-10\" id=\"phone\" name=\"phone\" type=\"text\" formControlName=\"phone\">\n      </div>\n      <div>\n        <label for=\"website\">Website</label>\n        <input class=\"w-10 h-10\" id=\"website\" name=\"website\" type=\"text\" formControlName=\"website\">\n      </div>\n      <div class=\"flex justify-between mt-auto\">\n        <app-button content=\"cancel\" (click)=\"closeModal()\"/>\n        <app-button type=\"submit\" content=\"save\" icon=\"save\" color=\"green\" (click)=\"onSubmit()\"/>\n        @if (!newItem) {\n          <app-button content=\"delete\" icon=\"delete\" color=\"red\" (click)=\"deleteProduct()\"/>\n        }\n      </div>\n    </form>\n  </div>\n</div>\n}\n"
+        },
+        {
+            "name": "TableComponent",
+            "id": "component-TableComponent-3dfbe6f45bad76aef9bfd5e0e5e4e329d08da01e0fabd0c664f4124c2ddeaef1b2ff375ebf4421ccce1121a501b7a8cdbe2a63fc2c12c7990162fa16f81a9ba2",
+            "file": "src/design-system/table/table.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-table",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "table.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [
+                {
+                    "name": "updateItem",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20,
+                    "modifierKind": [
+                        125
+                    ],
+                    "required": false
+                }
+            ],
+            "propertiesClass": [
+                {
+                    "name": "items",
+                    "defaultValue": "input.required<Table['items']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "updateItem",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20,
+                    "modifierKind": [
+                        125
+                    ],
+                    "required": false
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "TableHeaderComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "TableRowComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "TablePaginatorComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TableHeaderComponent } from './header/table-header.component';\nimport { TableRowComponent } from './row/table-row.component';\nimport { TablePaginatorComponent } from './paginator/table-pagination.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-table',\n  templateUrl: 'table.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TableHeaderComponent, TableRowComponent, TablePaginatorComponent],\n  standalone: true\n})\nexport class TableComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<app-table-header class=\"mb-3 block\"/>\n@for (item of items(); track item) {\n  <app-table-row [item]=\"item\" class=\"mb-3 block\" (click)=\"updateItem.emit(item)\"/>\n}\n<app-table-paginator/>\n"
+        },
+        {
+            "name": "TableHeaderComponent",
+            "id": "component-TableHeaderComponent-6f295890d1d63f777a7c6510eb08ba573918d593bbaa79c4386f1a9336f23cb1ed48b506e4fe0c49b5759f9338292318d34cd531055520274d06f6f3608d195b",
+            "file": "src/design-system/table/header/table-header.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-table-header",
+            "styleUrls": [],
+            "styles": [],
+            "template": "<div class=\"flex flex-row gap-2 w-full font-extralight px-5\">\n  <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('name')\">{{getPrefix('name')}} Name</p>\n  <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('email')\">{{getPrefix('email')}} Email</p>\n  <p class=\"basis-1/4\">Phone</p>\n  <p class=\"basis-1/4\">Website</p>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "_sort",
+                    "defaultValue": "computed(() => this.store.sort())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24,
+                    "modifierKind": [
+                        125,
+                        148
+                    ]
+                },
+                {
+                    "name": "_sortField",
+                    "defaultValue": "computed(() => this.store.sortField())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 25,
+                    "modifierKind": [
+                        125,
+                        148
+                    ]
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(UsersStore)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22,
+                    "modifierKind": [
+                        148
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "changeOrder",
+                    "args": [
+                        {
+                            "name": "field",
+                            "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 27,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "field",
+                            "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getPrefix",
+                    "args": [
+                        {
+                            "name": "field",
+                            "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "field",
+                            "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { patchState } from '@ngrx/signals';\nimport { UsersStore } from 'shared/users.store';\nimport type { User } from 'shared/db-models.interface';\n\n@Component({\n  selector: 'app-table-header',\n  template: `\n    <div class=\"flex flex-row gap-2 w-full font-extralight px-5\">\n      <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('name')\">{{getPrefix('name')}} Name</p>\n      <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('email')\">{{getPrefix('email')}} Email</p>\n      <p class=\"basis-1/4\">Phone</p>\n      <p class=\"basis-1/4\">Website</p>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true\n})\nexport class TableHeaderComponent {\n  readonly store = inject(UsersStore);\n\n  public readonly _sort = computed(() => this.store.sort());\n  public readonly _sortField = computed(() => this.store.sortField());\n\n  protected changeOrder(field: keyof User): void {\n    patchState(this.store, { sort: this._sort() === 'asc' ? 'des' : 'asc', sortField: field })\n  }\n\n  protected getPrefix(field: keyof User): string {\n    return this._sortField() === field ? this._sort() === 'asc' ? '↓' : '↑' : '';\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "TablePaginatorComponent",
+            "id": "component-TablePaginatorComponent-23c36e7161fdc69c0c418d34b9c568f5aa65c6e1c0d21ad54c57b586da3dddd1eb9f70225679f40cb0d59f9176f965b13da413bef4bdf5dace453b09f50bf245",
+            "file": "src/design-system/table/paginator/table-pagination.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-table-paginator",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "table-paginator.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "_currentPage",
+                    "defaultValue": "computed(() => this.store.currentPage())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16,
+                    "modifierKind": [
+                        125,
+                        148
+                    ]
+                },
+                {
+                    "name": "_itemsPerPage",
+                    "defaultValue": "computed(() => this.store.usersPerPage())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17,
+                    "modifierKind": [
+                        125,
+                        148
+                    ]
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(UsersStore)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14,
+                    "modifierKind": [
+                        148
+                    ]
+                },
+                {
+                    "name": "totalPages",
+                    "defaultValue": "computed(() => Math.ceil(this.store.users().length / this._itemsPerPage()) - 1)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19,
+                    "modifierKind": [
+                        124
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "changed",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 21,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "nextPage",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 25,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "previousPage",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 29,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "toTheEnd",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 37,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "toTheStart",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 33,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';\nimport { patchState } from '@ngrx/signals';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { UsersStore } from 'shared/users.store';\n\n@Component({\n  selector: 'app-table-paginator',\n  templateUrl: 'table-paginator.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true\n})\nexport class TablePaginatorComponent {\n  readonly store = inject(UsersStore);\n\n  public readonly _currentPage = computed(() => this.store.currentPage());\n  public readonly _itemsPerPage = computed(() => this.store.usersPerPage());\n\n  protected totalPages = computed(() => Math.ceil(this.store.users().length / this._itemsPerPage()) - 1)\n\n  protected changed(event: Event) {\n    const selectElement = event.target as HTMLSelectElement;\n    patchState(this.store, { usersPerPage: +selectElement?.value })\n  }\n  protected nextPage(): void {\n    patchState(this.store, { currentPage: this._currentPage() + 1 })\n  }\n\n  protected previousPage(): void {\n    patchState(this.store, { currentPage: this._currentPage() - 1 })\n  }\n\n  protected toTheStart(): void {\n    patchState(this.store, { currentPage: 0 })\n  }\n\n  protected toTheEnd(): void {\n    patchState(this.store, { currentPage: this.totalPages() })\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"flex items-center\">\n  <select class=\"me-2\" id=\"number_of_items\" (change)=\"changed($event)\">\n    <option value=\"5\" [selected]=\"_itemsPerPage() === 5\">5</option>\n    <option value=\"10\" [selected]=\"_itemsPerPage() === 10\">10</option>\n    <option value=\"20\" [selected]=\"_itemsPerPage() === 20\">20</option>\n  </select>\n  <p class=\"flex-1\">Items per page</p>\n  <button [disabled]=\"_currentPage() === 0\" (click)=\"toTheStart()\">\n    <app-icon name=\"first_page\" [size]=\"32\" [color]=\"_currentPage() === 0 ? 'grey': 'black'\" /></button>\n  <button [disabled]=\"_currentPage() === 0\" (click)=\"previousPage()\">\n    <app-icon name=\"arrow_left\" [size]=\"32\" [color]=\"_currentPage() === 0 ? 'grey': 'black'\" /></button>\n  <p>{{_currentPage() + 1}}</p>\n  <button [disabled]=\"_currentPage() === totalPages()\" (click)=\"nextPage()\">\n    <app-icon name=\"arrow_right\" [size]=\"32\" [color]=\"_currentPage() === totalPages() ? 'grey': 'black'\" /></button>\n  <button [disabled]=\"_currentPage() === totalPages()\" (click)=\"toTheEnd()\">\n    <app-icon name=\"last_page\" [size]=\"32\" [color]=\"_currentPage() === totalPages() ? 'grey': 'black'\" /></button>\n</div>\n"
+        },
+        {
+            "name": "TableRowComponent",
+            "id": "component-TableRowComponent-2024100fea08c74ded4b02839759518ddf437eac018d838d92fd81938478f862daabc9afb262c76df2bfb225ca4223749b96dd290aad389eb19b1ac9fd2d4409",
+            "file": "src/design-system/table/row/table-row.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-table-row",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "table-row.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "item",
+                    "defaultValue": "input.required<TableRow['item']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "DatePipe",
+                    "type": "pipe"
+                },
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input } from '@angular/core';\nimport { DatePipe } from '@angular/common';\nimport type { User } from 'shared/db-models.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\n\nexport interface TableRow {\n  item: User;\n}\n\n@Component({\n  selector: 'app-table-row',\n  templateUrl: 'table-row.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [DatePipe, IconComponent],\n  standalone: true\n})\nexport class TableRowComponent {\n  public item = input.required<TableRow['item']>();\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"flex flex-row items-center gap-2 w-full font-extralight bg-white shadow-md rounded-lg p-5 hover:bg-gray-50 cursor-pointer\">\n  <p class=\"basis-1/4 truncate font-bold\">{{ item().name }}</p>\n  <a class=\"basis-1/4 truncate\" [href]=\"'mailto:' + item().email\">{{ item().email }}</a>\n  <a class=\"basis-1/4 truncate\" [href]=\"'tel:+' + item().phone\">{{ item().phone }}</a>\n  <a class=\"basis-1/4 truncate\" [href]=\"'http://' + item().website\" target=\"_blank\">{{ item().website }}</a>\n</div>\n"
+        },
+        {
+            "name": "TileCardComponent",
+            "id": "component-TileCardComponent-a288bba38d75a4031d28dd2a77972a3e57582c88a0ed58386fc9e5fa5b1bc3a5896ace674974f12c0f4f16d345f1f351b63a6d51e84bde674cee20eb9624938b",
+            "file": "src/design-system/tiles/tile-card/tile-card.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "host": {},
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-tile-card",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "tile-card.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "item",
+                    "defaultValue": "input.required<TileCard['item']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input } from '@angular/core';\nimport type { User } from 'shared/db-models.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\n\nexport interface TileCard {\n  item: User;\n}\n\n@Component({\n  selector: 'app-tile-card',\n  templateUrl: 'tile-card.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true,\n  host: {\n    '[style.display]': '\"inline-block\"'\n  }})\nexport class TileCardComponent {\n  public item = input.required<TileCard['item']>();\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"shadow-md flex flex-col justify-end h-full bg-white hover:bg-gray-50 cursor-pointer\">\n  <div class=\"p-3 bg-app-modal-bg h-full flex items-center justify-center\">\n    <p class=\"text-center\">{{ item().name }}</p>\n  </div>\n  <div class=\"flex flex-col gap-3 p-3\">\n    <div class=\"flex justify-between\">\n      <div class=\"text-end\">\n        <p>Price</p>\n        <p class=\"basis-2/12 text-black font-black\">{{ item().email }}$</p>\n      </div>\n    </div>\n  </div>\n</div>\n"
+        },
+        {
+            "name": "TilesComponent",
+            "id": "component-TilesComponent-c6617c3a57afe2ecc0d1ac144125d3d7242dd684829585e4bf6e4fbaf70bcc1cdbf18c8a5ebedc01c208f1753ff60ca5d1b43606850b2b6a93fe43e5f422352e",
+            "file": "src/design-system/tiles/tiles.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-tiles",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "tiles.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [
+                {
+                    "name": "updateItem",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19,
+                    "modifierKind": [
+                        125
+                    ],
+                    "required": false
+                }
+            ],
+            "propertiesClass": [
+                {
+                    "name": "items",
+                    "defaultValue": "input.required<Table['items']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "updateItem",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19,
+                    "modifierKind": [
+                        125
+                    ],
+                    "required": false
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "TablePaginatorComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "TileCardComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TablePaginatorComponent } from '../table/paginator/table-pagination.component';\nimport { TileCardComponent } from './tile-card/tile-card.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-tiles',\n  templateUrl: 'tiles.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TablePaginatorComponent, TileCardComponent],\n  standalone: true\n})\nexport class TilesComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"grid gap-5 grid-cols-4\">\n  @for (item of items(); track item) {\n    <app-tile-card [item]=\"item\" class=\"mb-3 block\" (click)=\"updateItem.emit(item)\"/>\n  }\n</div>\n<app-table-paginator/>\n"
+        },
+        {
+            "name": "UserManagementComponent",
+            "id": "component-UserManagementComponent-b204d9517031201d2325eccc159541339cbe6a39c4e1bb258b0ae9b584eb5bd7e9241e7cebf983aa7c7e6a4aa5c748c354db487627f7f46af48aecff0d8a9ee3",
+            "file": "src/app/pages/user-management/user-management.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [
+                {
+                    "name": "UsersStore"
+                }
+            ],
+            "selector": "user-management-page",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./user-management.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "_filter",
+                    "defaultValue": "computed(() => this.store.filter())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24,
+                    "modifierKind": [
+                        125,
+                        148
+                    ]
+                },
+                {
+                    "name": "_view",
+                    "defaultValue": "computed(() => this.store.view())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 25,
+                    "modifierKind": [
+                        125,
+                        148
+                    ]
+                },
+                {
+                    "name": "modal",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ModalComponent",
+                    "optional": false,
+                    "description": "",
+                    "line": 22,
+                    "decorators": [
+                        {
+                            "name": "ViewChild",
+                            "stringifiedArguments": "ModalComponent"
+                        }
+                    ],
+                    "modifierKind": [
+                        170
+                    ]
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(UsersStore)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 23,
+                    "modifierKind": [
+                        148
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "changeView",
+                    "args": [
+                        {
+                            "name": "viewMode",
+                            "type": "ViewMode",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 35,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "viewMode",
+                            "type": "ViewMode",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "createItem",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 39,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ]
+                },
+                {
+                    "name": "filterItems",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "handleFormSubmit",
+                    "args": [
+                        {
+                            "name": "values",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 47,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "values",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "hangleProductToDelete",
+                    "args": [
+                        {
+                            "name": "id",
+                            "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 55,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "id",
+                            "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "updateItem",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "User",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 43,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "User",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "RouterOutlet"
+                },
+                {
+                    "name": "TableComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "AppTitleComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "InputFieldComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "NgClass"
+                },
+                {
+                    "name": "TilesComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "ModalComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, OnInit, Signal, ViewChild, computed, effect, inject } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport { patchState } from '@ngrx/signals';\nimport { NgClass } from '@angular/common';\nimport { User, ViewMode } from 'shared/db-models.interface';\nimport { UsersStore } from 'shared/users.store';\nimport { TableComponent } from 'design-system/table/table.component';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { InputFieldComponent } from 'design-system/input-field/input-field.component';\nimport { TilesComponent } from 'design-system/tiles/tiles.component';\nimport { ModalComponent } from 'design-system/modal/modal.component';\n\n@Component({\n  selector: 'user-management-page',\n  standalone: true,\n  imports: [RouterOutlet, TableComponent, AppTitleComponent, InputFieldComponent, IconComponent, NgClass, TilesComponent, ModalComponent],\n  providers: [UsersStore],\n  templateUrl: './user-management.component.html'\n})\nexport class UserManagementComponent {\n  @ViewChild(ModalComponent) modal!: ModalComponent;\n  readonly store = inject(UsersStore);\n  public readonly _filter = computed(() => this.store.filter());\n  public readonly _view = computed(() => this.store.view());\n\n  constructor() {\n    this.store.loadAll()\n  }\n\n  protected filterItems(event: string): void {\n    patchState(this.store, { filter: event })\n  }\n\n  protected changeView(viewMode: ViewMode): void {\n    patchState(this.store, { view: viewMode })\n  }\n\n  protected createItem() {\n    this.modal.openModal();\n  }\n\n  protected updateItem(event: User) {\n    this.modal.openModal(event);\n  }\n\n  protected handleFormSubmit(values: any) {\n    if (!values?.id) {\n      this.store.addUser(values)\n    } else {\n      this.store.updateUser(values)\n    }\n  }\n\n  protected hangleProductToDelete(id: User['id']) {\n    if (window.confirm('Are you sure you want to delete this user')) {\n      this.store.deleteUser(id)\n    }\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 25
+            },
+            "extends": [],
+            "templateData": "<div class=\"flex mb-7 items-center gap-3\">\n  <app-title class=\"flex-1\" size=\"large\" content=\"Management tool\" />\n  <button (click)=\"changeView('grid')\">\n    <app-icon\n      name=\"grid_view\"\n      [size]=\"32\"\n      [ngClass]=\"{\n        'fill-app-grey-basic': _view() === 'list',\n        'hover:fill-app-bluish': true,\n        'fill-app-blue': _view() === 'grid' }\"\n      />\n  </button>\n  <button (click)=\"changeView('list')\">\n    <app-icon\n      name=\"list_view\"\n      [size]=\"32\"\n      [ngClass]=\"{\n        'fill-app-grey-basic': _view() === 'grid',\n        'hover:fill-app-bluish': true,\n        'fill-app-blue': _view() === 'list' }\"\n      />\n  </button>\n  <button (click)=\"createItem()\">\n    <app-icon name=\"add\" class=\"fill-app-grey-basic hover:fill-app-bluish\" [size]=\"42\" />\n  </button>\n</div>\n<div class=\"block relative\">\n  <app-input-field id=\"searchbar\" placeholder=\"Find by name...\" class=\"mb-7\" [value]=\"_filter()\" (valueUpdated)=\"filterItems($event)\" prefix=\"search\" />\n</div>\n@if (store.isLoading()) {\n<p>Loading...</p>\n} @else {\n  @if (_view() === 'list') {\n    <app-table [items]=\"store.processedUsers()\" (updateItem)=\"updateItem($event)\"/>\n  } @else {\n    <app-tiles [items]=\"store.processedUsers()\" (updateItem)=\"updateItem($event)\"/>\n  }\n}\n<app-modal (formSubmit)=\"handleFormSubmit($event)\" (productToDelete)=\"hangleProductToDelete($event)\"/>\n"
+        }
+    ],
+    "modules": [],
+    "miscellaneous": {
+        "variables": [
+            {
+                "name": "appConfig",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/app.config.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ApplicationConfig",
+                "defaultValue": "{\r\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(), ReactiveFormsModule],\r\n}"
+            },
+            {
+                "name": "iconNames",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/icon/icon.interface.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "IconName[]",
+                "defaultValue": "ICONS_PATHS.map(({ name }) => name as IconName)"
+            },
+            {
+                "name": "icons",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/icon/icon.interface.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "literal type[]",
+                "defaultValue": "ICONS_PATHS.map(({ name, paths}) => ({ name: name as IconName, paths }))"
+            },
+            {
+                "name": "ICONS",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/icon/icon.interface.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "['first_page', 'last_page', 'arrow_left', 'arrow_right', 'save', 'add', 'grid_view', 'list_view', 'search', 'close', 'delete', 'edit', 'star-empty', 'star-filled'] as const"
+            },
+            {
+                "name": "ICONS_PATHS",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/icon/icons-collection.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "[\n  {\n    name: 'last_page',\n    paths: [\n      {\n        d: 'm280-240-56-56 184-184-184-184 56-56 240 240-240 240Zm360 0v-480h80v480h-80Z'\n      }\n    ]\n  },\n  {\n    name: 'first_page',\n    paths: [\n      {\n        d: 'M240-240v-480h80v480h-80Zm440 0L440-480l240-240 56 56-184 184 184 184-56 56Z'\n      }\n    ]\n  },\n  {\n    name: 'arrow_left',\n    paths: [\n      {\n        d: 'M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z'\n      }\n    ]\n  },\n  {\n    name: 'arrow_right',\n    paths: [\n      {\n        d: 'M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z'\n      }\n    ]\n  },\n  {\n    name: 'save',\n    paths: [\n      {\n        d: 'M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z'\n      }\n    ]\n  },\n  {\n    name: 'add',\n    paths: [\n      {\n        d: 'M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z'\n      }\n    ]\n  },\n  {\n    name: 'grid_view',\n    paths: [\n      {\n        d: 'M120-520v-320h320v320H120Zm0 400v-320h320v320H120Zm400-400v-320h320v320H520Zm0 400v-320h320v320H520Z'\n      }\n    ]\n  },\n  {\n    name: 'list_view',\n    paths: [\n      {\n        d: 'M360-160h440q33 0 56.5-23.5T880-240v-80H360v160ZM80-640h200v-160H160q-33 0-56.5 23.5T80-720v80Zm0 240h200v-160H80v160Zm80 240h120v-160H80v80q0 33 23.5 56.5T160-160Zm200-240h520v-160H360v160Zm0-240h520v-80q0-33-23.5-56.5T800-800H360v160Z'\n      }\n    ]\n  },\n  {\n    name: 'search',\n    paths: [\n      {\n        d: 'M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z'\n      }\n    ]\n  },\n  {\n    name: 'close',\n    paths: [\n      {\n        d: 'm256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z'\n      }\n    ]\n  },\n  {\n    name: 'delete',\n    paths: [\n      {\n        d: 'M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z'\n      }\n    ]\n  },\n  {\n    name: 'edit',\n    paths: [\n      {\n        d: 'M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z'\n      }\n    ]\n  },\n  {\n    name: 'star-empty',\n    paths: [\n      {\n        d: 'm354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z'\n      }\n    ]\n  },\n  {\n    name: 'star-filled',\n    paths: [\n      {\n        d: 'm233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z'\n      }\n    ]\n  }\n]"
+            },
+            {
+                "name": "initialItem",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/modal/modal.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "User",
+                "defaultValue": "{\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n}"
+            },
+            {
+                "name": "initialState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/shared/users.store.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "UsersState",
+                "defaultValue": "{\n  users: [],\n  isLoading: false,\n  error: null,\n  currentPage: 0,\n  usersPerPage: 5,\n  sort: 'asc',\n  sortField: 'name',\n  filter: '',\n  view: 'list'\n}"
+            },
+            {
+                "name": "Large",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/title/title.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    size: 'large',\n    content: 'Large title test'\n  },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<InputFieldComponent>",
+                "defaultValue": "{\n  title: 'Design System/Input field',\n  component: InputFieldComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    value: {\n      control: 'text',\n    },\n    prefix: {\n      control: 'inline-radio',\n      options: ICONS\n    }\n  },\n  args: {\n    id: 'input'\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/table.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TableComponent>",
+                "defaultValue": "{\n  title: 'Design System/Table',\n  component: TableComponent,\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/tiles/tiles.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TilesComponent>",
+                "defaultValue": "{\n  title: 'Design System/Tiles',\n  component: TilesComponent,\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/title/title.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<AppTitleComponent>",
+                "defaultValue": "{\n  title: 'Design System/Title',\n  component: AppTitleComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    size: {\n      control: 'radio',\n      options: ['small', 'large']\n    },\n    content: {\n      control: 'text'\n    }\n  },\n  parameters: {\n    controls: { exclude: ['textSize', 'textSizes', 'getClasses']}\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/row/table-row.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TableRowComponent>",
+                "defaultValue": "{\n  title: 'Design System/Table/Row',\n  component: TableRowComponent,\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TablePaginatorComponent>",
+                "defaultValue": "{\n  title: 'Design System/Table/Paginator',\n  component: TablePaginatorComponent,\n  tags: ['autodocs'],\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/header/table-header.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TableHeaderComponent>",
+                "defaultValue": "{\n  title: 'Design System/Table/Header',\n  component: TableHeaderComponent,\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TileCardComponent>",
+                "defaultValue": "{\n  title: 'Design System/Tiles/Tile card',\n  component: TileCardComponent,\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "Small",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/title/title.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    size: 'small',\n    content: 'Small title test'\n  },\n}"
+            },
+            {
+                "name": "usersMock",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/shared/users-mock.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "User[]",
+                "defaultValue": "[\n  {\n    id: 1,\n    name: \"Leanne Graham\",\n    username: \"Bret\",\n    email: \"Sincere@april.biz\",\n    address: {\n      street: \"Kulas Light\",\n      suite: \"Apt. 556\",\n      city: \"Gwenborough\",\n      zipcode: \"92998-3874\",\n      geo: {\n        lat: \"-37.3159\",\n        lng: \"81.1496\"\n      }\n    },\n    phone: \"1-770-736-8031 x56442\",\n    website: \"hildegard.org\",\n    company: {\n      name: \"Romaguera-Crona\",\n      catchPhrase: \"Multi-layered client-server neural-net\",\n      bs: \"harness real-time e-markets\"\n    }\n  },\n  {\n    id: 2,\n    name: \"Ervin Howell\",\n    username: \"Antonette\",\n    email: \"Shanna@melissa.tv\",\n    address: {\n      street: \"Victor Plains\",\n      suite: \"Suite 879\",\n      city: \"Wisokyburgh\",\n      zipcode: \"90566-7771\",\n      geo: {\n        lat: \"-43.9509\",\n        lng: \"-34.4618\"\n      }\n    },\n    phone: \"010-692-6593 x09125\",\n    website: \"anastasia.net\",\n    company: {\n      name: \"Deckow-Crist\",\n      catchPhrase: \"Proactive didactic contingency\",\n      bs: \"synergize scalable supply-chains\"\n    }\n  },\n  {\n    id: 3,\n    name: \"Clementine Bauch\",\n    username: \"Samantha\",\n    email: \"Nathan@yesenia.net\",\n    address: {\n      street: \"Douglas Extension\",\n      suite: \"Suite 847\",\n      city: \"McKenziehaven\",\n      zipcode: \"59590-4157\",\n      geo: {\n        lat: \"-68.6102\",\n        lng: \"-47.0653\"\n      }\n    },\n    phone: \"1-463-123-4447\",\n    website: \"ramiro.info\",\n    company: {\n      name: \"Romaguera-Jacobson\",\n      catchPhrase: \"Face to face bifurcated interface\",\n      bs: \"e-enable strategic applications\"\n    }\n  },\n  {\n    id: 4,\n    name: \"Patricia Lebsack\",\n    username: \"Karianne\",\n    email: \"Julianne.OConner@kory.org\",\n    address: {\n      street: \"Hoeger Mall\",\n      suite: \"Apt. 692\",\n      city: \"South Elvis\",\n      zipcode: \"53919-4257\",\n      geo: {\n        lat: \"29.4572\",\n        lng: \"-164.2990\"\n      }\n    },\n    phone: \"493-170-9623 x156\",\n    website: \"kale.biz\",\n    company: {\n      name: \"Robel-Corkery\",\n      catchPhrase: \"Multi-tiered zero tolerance productivity\",\n      bs: \"transition cutting-edge web services\"\n    }\n  },\n  {\n    id: 5,\n    name: \"Chelsey Dietrich\",\n    username: \"Kamren\",\n    email: \"Lucio_Hettinger@annie.ca\",\n    address: {\n      street: \"Skiles Walks\",\n      suite: \"Suite 351\",\n      city: \"Roscoeview\",\n      zipcode: \"33263\",\n      geo: {\n        lat: \"-31.8129\",\n        lng: \"62.5342\"\n      }\n    },\n    phone: \"(254)954-1289\",\n    website: \"demarco.info\",\n    company: {\n      name: \"Keebler LLC\",\n      catchPhrase: \"User-centric fault-tolerant solution\",\n      bs: \"revolutionize end-to-end systems\"\n    }\n  },\n  {\n    id: 6,\n    name: \"Mrs. Dennis Schulist\",\n    username: \"Leopoldo_Corkery\",\n    email: \"Karley_Dach@jasper.info\",\n    address: {\n      street: \"Norberto Crossing\",\n      suite: \"Apt. 950\",\n      city: \"South Christy\",\n      zipcode: \"23505-1337\",\n      geo: {\n        lat: \"-71.4197\",\n        lng: \"71.7478\"\n      }\n    },\n    phone: \"1-477-935-8478 x6430\",\n    website: \"ola.org\",\n    company: {\n      name: \"Considine-Lockman\",\n      catchPhrase: \"Synchronised bottom-line interface\",\n      bs: \"e-enable innovative applications\"\n    }\n  },\n  {\n    id: 7,\n    name: \"Kurtis Weissnat\",\n    username: \"Elwyn.Skiles\",\n    email: \"Telly.Hoeger@billy.biz\",\n    address: {\n      street: \"Rex Trail\",\n      suite: \"Suite 280\",\n      city: \"Howemouth\",\n      zipcode: \"58804-1099\",\n      geo: {\n        lat: \"24.8918\",\n        lng: \"21.8984\"\n      }\n    },\n    phone: \"210.067.6132\",\n    website: \"elvis.io\",\n    company: {\n      name: \"Johns Group\",\n      catchPhrase: \"Configurable multimedia task-force\",\n      bs: \"generate enterprise e-tailers\"\n    }\n  },\n  {\n    id: 8,\n    name: \"Nicholas Runolfsdottir V\",\n    username: \"Maxime_Nienow\",\n    email: \"Sherwood@rosamond.me\",\n    address: {\n      street: \"Ellsworth Summit\",\n      suite: \"Suite 729\",\n      city: \"Aliyaview\",\n      zipcode: \"45169\",\n      geo: {\n        lat: \"-14.3990\",\n        lng: \"-120.7677\"\n      }\n    },\n    phone: \"586.493.6943 x140\",\n    website: \"jacynthe.com\",\n    company: {\n      name: \"Abernathy Group\",\n      catchPhrase: \"Implemented secondary concept\",\n      bs: \"e-enable extensible e-tailers\"\n    }\n  },\n  {\n    id: 9,\n    name: \"Glenna Reichert\",\n    username: \"Delphine\",\n    email: \"Chaim_McDermott@dana.io\",\n    address: {\n      street: \"Dayna Park\",\n      suite: \"Suite 449\",\n      city: \"Bartholomebury\",\n      zipcode: \"76495-3109\",\n      geo: {\n        lat: \"24.6463\",\n        lng: \"-168.8889\"\n      }\n    },\n    phone: \"(775)976-6794 x41206\",\n    website: \"conrad.com\",\n    company: {\n      name: \"Yost and Sons\",\n      catchPhrase: \"Switchable contextually-based project\",\n      bs: \"aggregate real-time technologies\"\n    }\n  },\n  {\n    id: 10,\n    name: \"Clementina DuBuque\",\n    username: \"Moriah.Stanton\",\n    email: \"Rey.Padberg@karina.biz\",\n    address: {\n      street: \"Kattie Turnpike\",\n      suite: \"Suite 198\",\n      city: \"Lebsackbury\",\n      zipcode: \"31428-2261\",\n      geo: {\n        lat: \"-38.2386\",\n        lng: \"57.2232\"\n      }\n    },\n    phone: \"024-648-3804\",\n    website: \"ambrose.net\",\n    company: {\n      name: \"Hoeger LLC\",\n      catchPhrase: \"Centralized empowering task-force\",\n      bs: \"target end-to-end models\"\n    }\n  }\n]"
+            },
+            {
+                "name": "UsersStore",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/shared/users.store.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "signalStore(\n  { providedIn: 'root'},\n  withState(initialState),\n  withComputed(({ users, filter, sort, currentPage, usersPerPage, sortField }) => ({\n    processedUsers: computed(() => {\n      return users()\n      .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))\n      .sort((a, b) => {\n        const [valA, valB] = [a[sortField()], b[sortField()]];\n        if (typeof valA === 'string' && typeof valB === 'string') {\n          return sort() === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);\n        } else if (valA && valB) {\n          return sort() === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);\n        } else return -1;\n      })\n      .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())\n    }),\n  })),\n  withMethods((store, httpService = inject(HttpService)) => ({\n    loadAll() {\n      patchState(store, { isLoading: true });\n      httpService.getUsers().subscribe({\n        next: (users) => {\n          patchState(store, { users, isLoading: false });\n        },\n        error: (error) => patchState(store, { error, isLoading: false })\n      })\n    },\n    addUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.concat(user), isLoading: false }));\n    },\n    updateUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i), isLoading: false }));\n    },\n    deleteUser(id: User['id']) {\n      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id), isLoading: false }));\n    }\n  }))\n)"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/icon/icon.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    name: 'first_page',\n    size: 32,\n    color: '#ff8300'\n  }\n} satisfies Story"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/table.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: { items: usersMock },\n}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/tiles/tiles.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: { items: usersMock },\n}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/row/table-row.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/header/table-header.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
+            },
+            {
+                "name": "VariantWithIconAndPlaceholder",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    prefix: 'search',\n    placeholder: 'Type your test here...'\n  },\n}"
+            }
+        ],
+        "functions": [],
+        "typealiases": [
+            {
+                "name": "IconName",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "",
+                "file": "src/design-system/icon/icon.interface.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 199
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<Icon>",
+                "file": "src/design-system/icon/icon.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<InputFieldComponent>",
+                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<TableComponent>",
+                "file": "src/design-system/table/table.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<TilesComponent>",
+                "file": "src/design-system/tiles/tiles.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<AppTitleComponent>",
+                "file": "src/design-system/title/title.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<TableRowComponent>",
+                "file": "src/design-system/table/row/table-row.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<TablePaginatorComponent>",
+                "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<TableHeaderComponent>",
+                "file": "src/design-system/table/header/table-header.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<TileCardComponent>",
+                "file": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            },
+            {
+                "name": "UsersState",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "literal type",
+                "file": "src/shared/users.store.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 187
+            },
+            {
+                "name": "ViewMode",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"list\" | \"grid\"",
+                "file": "src/shared/db-models.interface.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 192
+            }
+        ],
+        "enumerations": [],
+        "groupedVariables": {
+            "src/app/app.config.ts": [
+                {
+                    "name": "appConfig",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/app.config.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ApplicationConfig",
+                    "defaultValue": "{\r\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(), ReactiveFormsModule],\r\n}"
+                }
+            ],
+            "src/design-system/icon/icon.interface.ts": [
+                {
+                    "name": "iconNames",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/icon/icon.interface.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IconName[]",
+                    "defaultValue": "ICONS_PATHS.map(({ name }) => name as IconName)"
+                },
+                {
+                    "name": "icons",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/icon/icon.interface.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "literal type[]",
+                    "defaultValue": "ICONS_PATHS.map(({ name, paths}) => ({ name: name as IconName, paths }))"
+                },
+                {
+                    "name": "ICONS",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/icon/icon.interface.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "['first_page', 'last_page', 'arrow_left', 'arrow_right', 'save', 'add', 'grid_view', 'list_view', 'search', 'close', 'delete', 'edit', 'star-empty', 'star-filled'] as const"
+                }
+            ],
+            "src/design-system/icon/icons-collection.ts": [
+                {
+                    "name": "ICONS_PATHS",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/icon/icons-collection.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "[\n  {\n    name: 'last_page',\n    paths: [\n      {\n        d: 'm280-240-56-56 184-184-184-184 56-56 240 240-240 240Zm360 0v-480h80v480h-80Z'\n      }\n    ]\n  },\n  {\n    name: 'first_page',\n    paths: [\n      {\n        d: 'M240-240v-480h80v480h-80Zm440 0L440-480l240-240 56 56-184 184 184 184-56 56Z'\n      }\n    ]\n  },\n  {\n    name: 'arrow_left',\n    paths: [\n      {\n        d: 'M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z'\n      }\n    ]\n  },\n  {\n    name: 'arrow_right',\n    paths: [\n      {\n        d: 'M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z'\n      }\n    ]\n  },\n  {\n    name: 'save',\n    paths: [\n      {\n        d: 'M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z'\n      }\n    ]\n  },\n  {\n    name: 'add',\n    paths: [\n      {\n        d: 'M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z'\n      }\n    ]\n  },\n  {\n    name: 'grid_view',\n    paths: [\n      {\n        d: 'M120-520v-320h320v320H120Zm0 400v-320h320v320H120Zm400-400v-320h320v320H520Zm0 400v-320h320v320H520Z'\n      }\n    ]\n  },\n  {\n    name: 'list_view',\n    paths: [\n      {\n        d: 'M360-160h440q33 0 56.5-23.5T880-240v-80H360v160ZM80-640h200v-160H160q-33 0-56.5 23.5T80-720v80Zm0 240h200v-160H80v160Zm80 240h120v-160H80v80q0 33 23.5 56.5T160-160Zm200-240h520v-160H360v160Zm0-240h520v-80q0-33-23.5-56.5T800-800H360v160Z'\n      }\n    ]\n  },\n  {\n    name: 'search',\n    paths: [\n      {\n        d: 'M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z'\n      }\n    ]\n  },\n  {\n    name: 'close',\n    paths: [\n      {\n        d: 'm256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z'\n      }\n    ]\n  },\n  {\n    name: 'delete',\n    paths: [\n      {\n        d: 'M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z'\n      }\n    ]\n  },\n  {\n    name: 'edit',\n    paths: [\n      {\n        d: 'M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z'\n      }\n    ]\n  },\n  {\n    name: 'star-empty',\n    paths: [\n      {\n        d: 'm354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z'\n      }\n    ]\n  },\n  {\n    name: 'star-filled',\n    paths: [\n      {\n        d: 'm233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z'\n      }\n    ]\n  }\n]"
+                }
+            ],
+            "src/design-system/modal/modal.component.ts": [
+                {
+                    "name": "initialItem",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/modal/modal.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "defaultValue": "{\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n}"
+                }
+            ],
+            "src/shared/users.store.ts": [
+                {
+                    "name": "initialState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/shared/users.store.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "UsersState",
+                    "defaultValue": "{\n  users: [],\n  isLoading: false,\n  error: null,\n  currentPage: 0,\n  usersPerPage: 5,\n  sort: 'asc',\n  sortField: 'name',\n  filter: '',\n  view: 'list'\n}"
+                },
+                {
+                    "name": "UsersStore",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/shared/users.store.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "signalStore(\n  { providedIn: 'root'},\n  withState(initialState),\n  withComputed(({ users, filter, sort, currentPage, usersPerPage, sortField }) => ({\n    processedUsers: computed(() => {\n      return users()\n      .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))\n      .sort((a, b) => {\n        const [valA, valB] = [a[sortField()], b[sortField()]];\n        if (typeof valA === 'string' && typeof valB === 'string') {\n          return sort() === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);\n        } else if (valA && valB) {\n          return sort() === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);\n        } else return -1;\n      })\n      .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())\n    }),\n  })),\n  withMethods((store, httpService = inject(HttpService)) => ({\n    loadAll() {\n      patchState(store, { isLoading: true });\n      httpService.getUsers().subscribe({\n        next: (users) => {\n          patchState(store, { users, isLoading: false });\n        },\n        error: (error) => patchState(store, { error, isLoading: false })\n      })\n    },\n    addUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.concat(user), isLoading: false }));\n    },\n    updateUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i), isLoading: false }));\n    },\n    deleteUser(id: User['id']) {\n      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id), isLoading: false }));\n    }\n  }))\n)"
+                }
+            ],
+            "src/design-system/title/title.stories.tsx": [
+                {
+                    "name": "Large",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/title/title.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    size: 'large',\n    content: 'Large title test'\n  },\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/title/title.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<AppTitleComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Title',\n  component: AppTitleComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    size: {\n      control: 'radio',\n      options: ['small', 'large']\n    },\n    content: {\n      control: 'text'\n    }\n  },\n  parameters: {\n    controls: { exclude: ['textSize', 'textSizes', 'getClasses']}\n  }\n}"
+                },
+                {
+                    "name": "Small",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/title/title.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    size: 'small',\n    content: 'Small title test'\n  },\n}"
+                }
+            ],
+            "src/design-system/input-field/input-field.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<InputFieldComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Input field',\n  component: InputFieldComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    value: {\n      control: 'text',\n    },\n    prefix: {\n      control: 'inline-radio',\n      options: ICONS\n    }\n  },\n  args: {\n    id: 'input'\n  }\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "VariantWithIconAndPlaceholder",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    prefix: 'search',\n    placeholder: 'Type your test here...'\n  },\n}"
+                }
+            ],
+            "src/design-system/table/table.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/table.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TableComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Table',\n  component: TableComponent,\n  tags: ['autodocs']\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/table.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: { items: usersMock },\n}"
+                }
+            ],
+            "src/design-system/tiles/tiles.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/tiles/tiles.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TilesComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Tiles',\n  component: TilesComponent,\n  tags: ['autodocs']\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/tiles/tiles.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: { items: usersMock },\n}"
+                }
+            ],
+            "src/design-system/table/row/table-row.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/row/table-row.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TableRowComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Table/Row',\n  component: TableRowComponent,\n  tags: ['autodocs']\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/row/table-row.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
+                }
+            ],
+            "src/design-system/table/paginator/table-paginator.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TablePaginatorComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Table/Paginator',\n  component: TablePaginatorComponent,\n  tags: ['autodocs'],\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                }
+            ],
+            "src/design-system/table/header/table-header.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/header/table-header.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TableHeaderComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Table/Header',\n  component: TableHeaderComponent,\n  tags: ['autodocs']\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/header/table-header.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                }
+            ],
+            "src/design-system/tiles/tile-card/tile-card.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TileCardComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Tiles/Tile card',\n  component: TileCardComponent,\n  tags: ['autodocs']\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
+                }
+            ],
+            "src/shared/users-mock.ts": [
+                {
+                    "name": "usersMock",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/shared/users-mock.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User[]",
+                    "defaultValue": "[\n  {\n    id: 1,\n    name: \"Leanne Graham\",\n    username: \"Bret\",\n    email: \"Sincere@april.biz\",\n    address: {\n      street: \"Kulas Light\",\n      suite: \"Apt. 556\",\n      city: \"Gwenborough\",\n      zipcode: \"92998-3874\",\n      geo: {\n        lat: \"-37.3159\",\n        lng: \"81.1496\"\n      }\n    },\n    phone: \"1-770-736-8031 x56442\",\n    website: \"hildegard.org\",\n    company: {\n      name: \"Romaguera-Crona\",\n      catchPhrase: \"Multi-layered client-server neural-net\",\n      bs: \"harness real-time e-markets\"\n    }\n  },\n  {\n    id: 2,\n    name: \"Ervin Howell\",\n    username: \"Antonette\",\n    email: \"Shanna@melissa.tv\",\n    address: {\n      street: \"Victor Plains\",\n      suite: \"Suite 879\",\n      city: \"Wisokyburgh\",\n      zipcode: \"90566-7771\",\n      geo: {\n        lat: \"-43.9509\",\n        lng: \"-34.4618\"\n      }\n    },\n    phone: \"010-692-6593 x09125\",\n    website: \"anastasia.net\",\n    company: {\n      name: \"Deckow-Crist\",\n      catchPhrase: \"Proactive didactic contingency\",\n      bs: \"synergize scalable supply-chains\"\n    }\n  },\n  {\n    id: 3,\n    name: \"Clementine Bauch\",\n    username: \"Samantha\",\n    email: \"Nathan@yesenia.net\",\n    address: {\n      street: \"Douglas Extension\",\n      suite: \"Suite 847\",\n      city: \"McKenziehaven\",\n      zipcode: \"59590-4157\",\n      geo: {\n        lat: \"-68.6102\",\n        lng: \"-47.0653\"\n      }\n    },\n    phone: \"1-463-123-4447\",\n    website: \"ramiro.info\",\n    company: {\n      name: \"Romaguera-Jacobson\",\n      catchPhrase: \"Face to face bifurcated interface\",\n      bs: \"e-enable strategic applications\"\n    }\n  },\n  {\n    id: 4,\n    name: \"Patricia Lebsack\",\n    username: \"Karianne\",\n    email: \"Julianne.OConner@kory.org\",\n    address: {\n      street: \"Hoeger Mall\",\n      suite: \"Apt. 692\",\n      city: \"South Elvis\",\n      zipcode: \"53919-4257\",\n      geo: {\n        lat: \"29.4572\",\n        lng: \"-164.2990\"\n      }\n    },\n    phone: \"493-170-9623 x156\",\n    website: \"kale.biz\",\n    company: {\n      name: \"Robel-Corkery\",\n      catchPhrase: \"Multi-tiered zero tolerance productivity\",\n      bs: \"transition cutting-edge web services\"\n    }\n  },\n  {\n    id: 5,\n    name: \"Chelsey Dietrich\",\n    username: \"Kamren\",\n    email: \"Lucio_Hettinger@annie.ca\",\n    address: {\n      street: \"Skiles Walks\",\n      suite: \"Suite 351\",\n      city: \"Roscoeview\",\n      zipcode: \"33263\",\n      geo: {\n        lat: \"-31.8129\",\n        lng: \"62.5342\"\n      }\n    },\n    phone: \"(254)954-1289\",\n    website: \"demarco.info\",\n    company: {\n      name: \"Keebler LLC\",\n      catchPhrase: \"User-centric fault-tolerant solution\",\n      bs: \"revolutionize end-to-end systems\"\n    }\n  },\n  {\n    id: 6,\n    name: \"Mrs. Dennis Schulist\",\n    username: \"Leopoldo_Corkery\",\n    email: \"Karley_Dach@jasper.info\",\n    address: {\n      street: \"Norberto Crossing\",\n      suite: \"Apt. 950\",\n      city: \"South Christy\",\n      zipcode: \"23505-1337\",\n      geo: {\n        lat: \"-71.4197\",\n        lng: \"71.7478\"\n      }\n    },\n    phone: \"1-477-935-8478 x6430\",\n    website: \"ola.org\",\n    company: {\n      name: \"Considine-Lockman\",\n      catchPhrase: \"Synchronised bottom-line interface\",\n      bs: \"e-enable innovative applications\"\n    }\n  },\n  {\n    id: 7,\n    name: \"Kurtis Weissnat\",\n    username: \"Elwyn.Skiles\",\n    email: \"Telly.Hoeger@billy.biz\",\n    address: {\n      street: \"Rex Trail\",\n      suite: \"Suite 280\",\n      city: \"Howemouth\",\n      zipcode: \"58804-1099\",\n      geo: {\n        lat: \"24.8918\",\n        lng: \"21.8984\"\n      }\n    },\n    phone: \"210.067.6132\",\n    website: \"elvis.io\",\n    company: {\n      name: \"Johns Group\",\n      catchPhrase: \"Configurable multimedia task-force\",\n      bs: \"generate enterprise e-tailers\"\n    }\n  },\n  {\n    id: 8,\n    name: \"Nicholas Runolfsdottir V\",\n    username: \"Maxime_Nienow\",\n    email: \"Sherwood@rosamond.me\",\n    address: {\n      street: \"Ellsworth Summit\",\n      suite: \"Suite 729\",\n      city: \"Aliyaview\",\n      zipcode: \"45169\",\n      geo: {\n        lat: \"-14.3990\",\n        lng: \"-120.7677\"\n      }\n    },\n    phone: \"586.493.6943 x140\",\n    website: \"jacynthe.com\",\n    company: {\n      name: \"Abernathy Group\",\n      catchPhrase: \"Implemented secondary concept\",\n      bs: \"e-enable extensible e-tailers\"\n    }\n  },\n  {\n    id: 9,\n    name: \"Glenna Reichert\",\n    username: \"Delphine\",\n    email: \"Chaim_McDermott@dana.io\",\n    address: {\n      street: \"Dayna Park\",\n      suite: \"Suite 449\",\n      city: \"Bartholomebury\",\n      zipcode: \"76495-3109\",\n      geo: {\n        lat: \"24.6463\",\n        lng: \"-168.8889\"\n      }\n    },\n    phone: \"(775)976-6794 x41206\",\n    website: \"conrad.com\",\n    company: {\n      name: \"Yost and Sons\",\n      catchPhrase: \"Switchable contextually-based project\",\n      bs: \"aggregate real-time technologies\"\n    }\n  },\n  {\n    id: 10,\n    name: \"Clementina DuBuque\",\n    username: \"Moriah.Stanton\",\n    email: \"Rey.Padberg@karina.biz\",\n    address: {\n      street: \"Kattie Turnpike\",\n      suite: \"Suite 198\",\n      city: \"Lebsackbury\",\n      zipcode: \"31428-2261\",\n      geo: {\n        lat: \"-38.2386\",\n        lng: \"57.2232\"\n      }\n    },\n    phone: \"024-648-3804\",\n    website: \"ambrose.net\",\n    company: {\n      name: \"Hoeger LLC\",\n      catchPhrase: \"Centralized empowering task-force\",\n      bs: \"target end-to-end models\"\n    }\n  }\n]"
+                }
+            ],
+            "src/design-system/icon/icon.stories.tsx": [
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/icon/icon.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    name: 'first_page',\n    size: 32,\n    color: '#ff8300'\n  }\n} satisfies Story"
+                }
+            ]
+        },
+        "groupedFunctions": {},
+        "groupedEnumerations": {},
+        "groupedTypeAliases": {
+            "src/design-system/icon/icon.interface.ts": [
+                {
+                    "name": "IconName",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "",
+                    "file": "src/design-system/icon/icon.interface.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 199
+                }
+            ],
+            "src/design-system/icon/icon.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<Icon>",
+                    "file": "src/design-system/icon/icon.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/input-field/input-field.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<InputFieldComponent>",
+                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/table/table.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TableComponent>",
+                    "file": "src/design-system/table/table.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/tiles/tiles.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TilesComponent>",
+                    "file": "src/design-system/tiles/tiles.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/title/title.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<AppTitleComponent>",
+                    "file": "src/design-system/title/title.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/table/row/table-row.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TableRowComponent>",
+                    "file": "src/design-system/table/row/table-row.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/table/paginator/table-paginator.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TablePaginatorComponent>",
+                    "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/table/header/table-header.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TableHeaderComponent>",
+                    "file": "src/design-system/table/header/table-header.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/tiles/tile-card/tile-card.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TileCardComponent>",
+                    "file": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/shared/users.store.ts": [
+                {
+                    "name": "UsersState",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "literal type",
+                    "file": "src/shared/users.store.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 187
+                }
+            ],
+            "src/shared/db-models.interface.ts": [
+                {
+                    "name": "ViewMode",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"list\" | \"grid\"",
+                    "file": "src/shared/db-models.interface.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 192
+                }
+            ]
+        }
+    },
+    "routes": [],
+    "coverage": {
+        "count": 0,
+        "status": "low",
+        "files": [
+            {
+                "filePath": "src/app/app.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AppComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/app.config.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "appConfig",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/user-management/user-management.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "UserManagementComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/12",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/button/button.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ButtonComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/8",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/button/button.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Button",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icon.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "IconComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icon.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Icon",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icon.interface.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "iconNames",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icon.interface.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "icons",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icon.interface.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ICONS",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icon.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/icon/icons-collection.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ICONS_PATHS",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/input-field/input-field.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "InputFieldComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/input-field/input-field.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "InputField",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/input-field/input-field.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/input-field/input-field.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/input-field/input-field.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "VariantWithIconAndPlaceholder",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/modal/modal.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ModalComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/13",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/modal/modal.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Modal",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/modal/modal.component.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "initialItem",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/header/table-header.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TableHeaderComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/header/table-header.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/header/table-header.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/paginator/table-pagination.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TablePaginatorComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/row/table-row.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TableRowComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/row/table-row.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "TableRow",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/row/table-row.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/row/table-row.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/table.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TableComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/table.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Table",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/table.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/table/table.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tile-card/tile-card.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TileCardComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tile-card/tile-card.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "TileCard",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tile-card/tile-card.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tiles.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TilesComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tiles.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Table",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tiles.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/tiles/tiles.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/title/title.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AppTitleComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/title/title.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "AppTitle",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/title/title.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Large",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/title/title.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/title/title.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Small",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/services/http.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "HttpService",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/db-models.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "User",
+                "coveragePercent": 0,
+                "coverageCount": "0/9",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/users-mock.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "usersMock",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/users.store.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "initialState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/users.store.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "UsersStore",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            }
+        ]
+    }
+}
