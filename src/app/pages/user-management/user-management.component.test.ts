@@ -83,10 +83,11 @@ test.describe('UserManagementComponent', () => {
   });
 
   test('should delete a user', async ({ page }) => {
-    page.on('dialog', dialog => dialog.accept());
+    page.on('dialog', async dialog => await dialog.accept());
     await page.getByTestId("search-input").pressSequentially(usersMock[0].name, { delay: 100 });
     await page.getByTestId("user-row").first().dblclick();
     await page.getByTestId("user-form-delete").click();
+    await page.getByTestId("user-modal").waitFor({ state: 'hidden' })
     const filteredUsers = await page.getByTestId("user-row").all();
     await expect(filteredUsers.length).toBe(0);
   });
