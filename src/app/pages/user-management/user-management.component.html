@@ -1,6 +1,6 @@
 <div class="flex mb-7 items-center gap-3">
   <app-title class="flex-1" size="large" content="User management" />
-  <button (click)="changeView('grid')">
+  <button (click)="changeView('grid')" data-testid="view-mode-grid">
     <app-icon
       name="grid_view"
       [size]="32"
@@ -10,7 +10,7 @@
         'fill-app-blue': _view() === 'grid' }"
       />
   </button>
-  <button (click)="changeView('list')">
+  <button (click)="changeView('list')" data-testid="view-mode-table">
     <app-icon
       name="list_view"
       [size]="32"
@@ -20,7 +20,7 @@
         'fill-app-blue': _view() === 'list' }"
       />
   </button>
-  <button (click)="createItem()">
+  <button (click)="createItem()" data-testid="create-user-button">
     <app-icon name="add" class="fill-app-grey-basic hover:fill-app-bluish" [size]="42" />
   </button>
 </div>
@@ -36,4 +36,4 @@
     <app-tiles [items]="store.processedUsers()" (updateItem)="updateItem($event)"/>
   }
 }
-<app-modal (formSubmit)="handleFormSubmit($event)" (productToDelete)="hangleProductToDelete($event)"/>
+<app-modal (formSubmit)="handleFormSubmit($event)" (productToDelete)="hangleUserToDelete($event)"/>

@@ -19,6 +19,7 @@ export interface SearchInput {
       <label ></label>
       @if (prefix()!) { <app-icon class="absolute inset-y-4 left-0 ml-4" [name]="prefix()!" [size]="32" color="#CBCBCB" /> }
       <input
+        data-testid="search-input"
         [ngClass]="{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}"
         [id]="id()"
         [name]="id()"

@@ -52,7 +52,7 @@ export class UserManagementComponent {
     }
   }
 
-  protected hangleProductToDelete(id: User['id']) {
+  protected hangleUserToDelete(id: User['id']) {
     if (window.confirm('Are you sure you want to delete this user')) {
       this.store.deleteUser(id)
     }

@@ -1,5 +1,5 @@
 @if (isOpen()) {
-<div class="fixed flex top-0 left-0 w-full h-full justify-end" (click)="closeModal()">
+<div class="fixed flex top-0 left-0 w-full h-full justify-end" (click)="closeModal()" data-testid="user-modal">
   <div class="w-full sm:w-4/5 md:w-2/3 lg:w-1/2 xl:w-2/5 bg-app-modal-bg shadow-xl px-7 sm:px-20 py-10 flex flex-col h-100" (click)="$event.stopPropagation()">
     <div class="flex mb-10 justify-between">
       <app-title [content]="newItem ? 'Create New' : 'Update'" size="large" />
@@ -11,30 +11,30 @@
       <div class="flex gap-3">
         <div class="flex-1">
           <label for="name">Name</label>
-          <input id="name" formControlName="name" [ngClass]="{'border-red-500 bg-red-100': form.get('name')?.invalid && form.get('name')?.touched}" placeholder="Enter a name">
+          <input id="name" formControlName="name" [ngClass]="{'border-red-500 bg-red-100': form.get('name')?.invalid && form.get('name')?.touched}" placeholder="Enter a name" data-testid="user-form-name">
           <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('name')}"></ng-container>
         </div>
         <div class="flex-1">
           <label for="email">Email</label>
-          <input id="email" type="email" name="email" formControlName="email" [ngClass]="{'border-red-500 bg-red-100': form.get('email')?.invalid && form.get('email')?.touched}" placeholder="Type the email...">
+          <input id="email" type="email" name="email" formControlName="email" [ngClass]="{'border-red-500 bg-red-100': form.get('email')?.invalid && form.get('email')?.touched}" placeholder="Type the email..." data-testid="user-form-email">
           <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('email')}"></ng-container>
         </div>
       </div>
       <div>
         <label for="phone">Phone</label>
-        <input id="phone" formControlName="phone" [ngClass]="{'border-red-500 bg-red-100': form.get('phone')?.invalid && form.get('phone')?.touched}" placeholder="Enter phone number">
+        <input id="phone" formControlName="phone" [ngClass]="{'border-red-500 bg-red-100': form.get('phone')?.invalid && form.get('phone')?.touched}" placeholder="Enter phone number" data-testid="user-form-phone">
         <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('phone')}"></ng-container>
       </div>
       <div>
         <label for="website">Website</label>
-        <input id="website" formControlName="website" [ngClass]="{'border-red-500 bg-red-100': form.get('website')?.invalid && form.get('website')?.touched}" placeholder="Enter a website">
+        <input id="website" formControlName="website" [ngClass]="{'border-red-500 bg-red-100': form.get('website')?.invalid && form.get('website')?.touched}" placeholder="Enter a website" data-testid="user-form-website">
         <ng-container *ngTemplateOutlet="errorTemplate; context: {control: form.get('website')}"></ng-container>
       </div>
       <div class="flex justify-between mt-auto">
         <app-button content="cancel" (click)="closeModal()"/>
-        <app-button type="submit" content="save" icon="save" color="green" (click)="onSubmit()" [disabled]="form.invalid"/>
+        <app-button type="submit" content="save" icon="save" color="green" (click)="onSubmit()" [disabled]="form.invalid" data-testid="user-form-save"/>
         @if (!newItem) {
-          <app-button content="delete" icon="delete" color="red" (click)="deleteProduct()"/>
+          <app-button content="delete" icon="delete" color="red" (click)="deleteProduct()" data-testid="user-form-delete"/>
         }
       </div>
     </form>
