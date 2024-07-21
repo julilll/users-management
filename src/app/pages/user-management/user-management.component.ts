@@ -29,7 +29,7 @@ export class UserManagementComponent {
   }
 
   protected filterItems(event: string): void {
-    patchState(this.store, { filter: event })
+    this.store.filterItems(event)
   }
 
   protected changeView(viewMode: ViewMode): void {

@@ -1,5 +1,5 @@
 <div class="flex items-center">
-  <select class="me-2" id="number_of_items" (change)="changed($event)">
+  <select class="me-2" id="number_of_items" (change)="itemsPerPageUpdated($event)">
     <option value="5" [selected]="_itemsPerPage() === 5">5</option>
     <option value="10" [selected]="_itemsPerPage() === 10">10</option>
     <option value="20" [selected]="_itemsPerPage() === 20">20</option>

@@ -16,9 +16,11 @@ export interface Button {
   template: `
     <button [ngClass]="buttonClasses()" [type]="type()" [style.backgroundColor]="disabled()? 'grey' : _color()" [style.borderColor]="disabled()? 'grey' : _color()" [disabled]="disabled()">
       @if (icon()) {
-        <app-icon [size]="16" [ngClass]="iconClasses()" [name]="icon()"/>
+          <app-icon [size]="16" [ngClass]="iconClasses()" [name]="icon()!"/>
         }
-      <p [ngClass]="_color() || disabled()? 'text-white': 'text-app-font-color'">{{ content() | uppercase }}</p>
+      @if (content()) {
+        <p [ngClass]="_color() || disabled()? 'text-white': 'text-app-font-color'">{{ content() | uppercase }}</p>
+      }
     </button>
   `,
   imports: [IconComponent, NgClass, UpperCasePipe],

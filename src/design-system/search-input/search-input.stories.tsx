@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { fn } from '@storybook/test';
 import { SearchInputComponent } from './search-input.component';
 import { ICONS } from '../icon/icon.interface';
 
 const meta: Meta<SearchInputComponent> = {
-  title: 'Design System/Input field',
+  title: 'Design System/Search input',
   component: SearchInputComponent,
   tags: ['autodocs'],
   argTypes: {
@@ -13,10 +14,13 @@ const meta: Meta<SearchInputComponent> = {
     prefix: {
       control: 'inline-radio',
       options: ICONS
-    }
+    },
   },
   args: {
-    id: 'input'
+    id: 'input',
+  },
+  parameters: {
+    controls: { exclude: ['value', 'valueUpdated', 'valueUpdatedEvent']}
   }
 };
 

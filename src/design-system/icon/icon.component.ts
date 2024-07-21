@@ -4,7 +4,7 @@ import { type IconName, icons } from './icon.interface';
 export interface Icon {
   color?: string;
   size: number;
-  name?: IconName;
+  name: IconName;
 }
 
 @Component({

@@ -1,19 +1,8 @@
 import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
 import { HttpService } from "../services/http.service";
 import { computed, inject } from "@angular/core";
-import type { User, ViewMode } from "shared/db-models.interface";
-
-type UsersState = {
-  users: User[];
-  isLoading: boolean;
-  error: string | null,
-  currentPage: number;
-  usersPerPage: number,
-  sort: 'asc' | 'des',
-  sortField: keyof User,
-  filter: string,
-  view: ViewMode
-}
+import type { User, UsersState } from "shared/db-models.interface";
+import { sortedValues, updatedCurrentPage, UUID } from "./utils";
 
 const initialState: UsersState = {
   users: [],
@@ -21,7 +10,7 @@ const initialState: UsersState = {
   error: null,
   currentPage: 0,
   usersPerPage: 5,
-  sort: 'asc',
+  sortDirection: 'asc',
   sortField: 'name',
   filter: '',
   view: 'list'
@@ -30,22 +19,21 @@ const initialState: UsersState = {
 export const UsersStore = signalStore(
   { providedIn: 'root'},
   withState(initialState),
-  withComputed(({ users, filter, sort, currentPage, usersPerPage, sortField }) => ({
+  withComputed(({ users, filter, sortDirection, currentPage, usersPerPage, sortField }) => ({
     processedUsers: computed(() => {
       return users()
       .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))
-      .sort((a, b) => {
-        const [valA, valB] = [a[sortField()], b[sortField()]];
-        if (typeof valA === 'string' && typeof valB === 'string') {
-          return sort() === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-        } else if (valA && valB) {
-          return sort() === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
-        } else return -1;
-      })
+      .sort((a, b) => sortedValues(a, b, sortDirection(), sortField()))
       .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())
     }),
   })),
   withMethods((store, httpService = inject(HttpService)) => ({
+    updatePerPageCount(numberOfItems: number) {
+      patchState(store, { usersPerPage: numberOfItems, currentPage: updatedCurrentPage(store.usersPerPage(), numberOfItems, store.currentPage()) })
+    },
+    filterItems(filterby: string) {
+      patchState(store, { filter: filterby, currentPage: 0 })
+    },
     loadAll() {
       patchState(store, { isLoading: true });
       httpService.getUsers().subscribe({
@@ -56,13 +44,13 @@ export const UsersStore = signalStore(
       })
     },
     addUser(user: User) {
-      patchState(store, (state) => ({ users: state.users.concat(user), isLoading: false }));
+      patchState(store, (state) => ({ users: state.users.concat({...user, id: UUID(store.users()) }) }));
     },
     updateUser(user: User) {
-      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i), isLoading: false }));
+      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i) }));
     },
     deleteUser(id: User['id']) {
-      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id), isLoading: false }));
+      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id) }));
     }
   }))
 )

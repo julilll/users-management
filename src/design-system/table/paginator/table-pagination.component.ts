@@ -18,9 +18,9 @@ export class TablePaginatorComponent {
 
   protected totalPages = computed(() => Math.ceil(this.store.users().length / this._itemsPerPage()) - 1)
 
-  protected changed(event: Event) {
+  protected itemsPerPageUpdated(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    patchState(this.store, { usersPerPage: +selectElement?.value })
+    this.store.updatePerPageCount(+selectElement?.value)
   }
   protected nextPage(): void {
     patchState(this.store, { currentPage: this._currentPage() + 1 })

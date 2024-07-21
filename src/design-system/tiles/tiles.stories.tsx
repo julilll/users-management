@@ -11,7 +11,8 @@ const meta: Meta<TilesComponent> = {
 export default meta;
 type Story = StoryObj<TilesComponent>;
 
-export const Variant: Story = {
-  args: { items: usersMock },
-};
+export const Empty: Story = {};
 
+export const Variant: Story = {
+  args: { items: usersMock.slice(0, 5) },
+};

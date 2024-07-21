@@ -11,7 +11,8 @@ const meta: Meta<TableComponent> = {
 export default meta;
 type Story = StoryObj<TableComponent>;
 
-export const Variant: Story = {
-  args: { items: usersMock },
-};
+export const Empty: Story = {};
 
+export const Variant: Story = {
+  args: { items: usersMock.slice(0, 5) },
+};

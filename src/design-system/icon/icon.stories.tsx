@@ -11,7 +11,16 @@ export default {
   argTypes: {
     name: {
       control: 'inline-radio',
-      options: ICONS
+      options: ICONS,
+      description: 'Icon name from Google icons collection',
+    },
+    size: {
+      control: 'number',
+      description: 'In pixels'
+    },
+    color: {
+      control: 'color',
+      description: 'HEX value'
     }
   },
   parameters: {
@@ -19,8 +28,14 @@ export default {
   }
 } satisfies Meta<Icon>;
 
-
 export const Variant: Story = {
+  args: {
+    name: 'first_page',
+    size: 32
+  }
+} satisfies Story;
+
+export const VariantWithCustomColor: Story = {
   args: {
     name: 'first_page',
     size: 32,

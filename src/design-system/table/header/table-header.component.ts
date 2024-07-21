@@ -21,14 +21,14 @@ import type { User } from 'shared/db-models.interface';
 export class TableHeaderComponent {
   readonly store = inject(UsersStore);
 
-  public readonly _sort = computed(() => this.store.sort());
+  public readonly _sortDirection = computed(() => this.store.sortDirection());
   public readonly _sortField = computed(() => this.store.sortField());
 
   protected changeOrder(field: keyof User): void {
-    patchState(this.store, { sort: this._sort() === 'asc' ? 'des' : 'asc', sortField: field })
+    patchState(this.store, { sortDirection: this._sortDirection() === 'asc' ? 'des' : 'asc', sortField: field })
   }
 
   protected getPrefix(field: keyof User): string {
-    return this._sortField() === field ? this._sort() === 'asc' ? '↓' : '↑' : '';
+    return this._sortField() === field ? this._sortDirection() === 'asc' ? '↓' : '↑' : '';
   }
 }

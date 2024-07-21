@@ -36,12 +36,12 @@
         },
         {
             "name": "Button",
-            "id": "interface-Button-1ee8125bf70b13d3b121a8e616c03320a1bbd93dac89a3ac78e765f1c9d7dd86c40dc59d5046632ffabb82654887bef016e6855604db228ed743c35224ff89dd",
+            "id": "interface-Button-78b1c874b17ba9927d48bb5e5aeb1404b07daac77f6a0fb7136f652d73b2555e5fae0fac4351f538b749b4d5b53ec5b9eb3bb2b35ae3058b782bec34dbd253b6",
             "file": "src/design-system/button/button.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, ViewChild, computed, input } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass, UpperCasePipe } from '@angular/common';\nimport { IconName } from 'design-system/icon/icon.interface';\n\nexport interface Button {\n  type?: string;\n  color?: string;\n  content?: string;\n  icon?: IconName;\n}\n\n@Component({\n  selector: 'app-button',\n  template: `\n    <button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"_color()\">\n      @if (icon()) {\n        <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()\"/>\n        }\n      <p [ngClass]=\"_color()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n    </button>\n  `,\n  imports: [IconComponent, NgClass, UpperCasePipe],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true\n})\nexport class ButtonComponent {\n  public color = input<Button['color']>();\n  public type = input<Button['type']>();\n  public content = input<Button['content']>();\n  public icon = input<Button['icon']>();\n  protected _color = computed(() => this.color());\n\n  protected buttonClasses(): string {\n    return `py-3 px-10 border-2 flex items-center gap-2`\n  }\n\n  protected iconClasses(): string {\n    return this.color() ? \"fill-white\": \"fill-app-font-color\"\n  }\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, ViewChild, computed, input } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass, UpperCasePipe } from '@angular/common';\nimport { IconName } from 'design-system/icon/icon.interface';\n\nexport interface Button {\n  type?: string;\n  color?: string;\n  content?: string;\n  icon?: IconName;\n  disabled?: boolean;\n}\n\n@Component({\n  selector: 'app-button',\n  template: `\n    <button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"disabled()? 'grey' : _color()\" [style.borderColor]=\"disabled()? 'grey' : _color()\" [disabled]=\"disabled()\">\n      @if (icon()) {\n          <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()!\"/>\n        }\n      @if (content()) {\n        <p [ngClass]=\"_color() || disabled()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n      }\n    </button>\n  `,\n  imports: [IconComponent, NgClass, UpperCasePipe],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true\n})\nexport class ButtonComponent {\n  public color = input<Button['color']>();\n  public type = input<Button['type']>();\n  public disabled = input<Button['disabled']>();\n  public content = input<Button['content']>();\n  public icon = input<Button['icon']>();\n  protected _color = computed(() => this.color());\n\n  protected buttonClasses(): string {\n    return `py-2 px-6 border-2 flex items-center gap-2 rounded`\n  }\n\n  protected iconClasses(): string {\n    return this.color() ? \"fill-white\": \"fill-app-font-color\"\n  }\n}\n",
             "properties": [
                 {
                     "name": "color",
@@ -60,6 +60,15 @@
                     "optional": true,
                     "description": "",
                     "line": 9
+                },
+                {
+                    "name": "disabled",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "optional": true,
+                    "description": "",
+                    "line": 11
                 },
                 {
                     "name": "icon",
@@ -87,12 +96,12 @@
         },
         {
             "name": "Icon",
-            "id": "interface-Icon-30b6a1833f925049276137534ef7812651206474c5ed5fb943e014469a02411251fef01c1d9a919aa4f46c57b52e795f61955a1e707474c3ecbed0022c808800",
+            "id": "interface-Icon-932716486118b6cd4878f2bf80af4f83f3410bc097e5bdeb37565c211e1ee1502446df969f41d33706c6e40950969ba9e41bca9c6646c62424416af923fab933",
             "file": "src/design-system/icon/icon.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\nimport { type IconName, icons } from './icon.interface';\n\nexport interface Icon {\n  color?: string;\n  size: number;\n  name?: IconName;\n}\n\n@Component({\n  selector: 'app-icon',\n  template: `\n    <svg viewBox=\"0 -960 960 960\">\n      @for (path of paths(); track $index) {\n        <path [attr.d]=\"path.d\"></path>\n      }\n    </svg>\n  `,\n  styles: `\n    :host {\n      display: flex;\n    }\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.fill]': 'color()',\n    '[style.width]': 'size() + \"px\"',\n    '[style.height]': 'size() + \"px\"',\n  }\n})\nexport class IconComponent {\n  public color = input<Icon['color']>();\n  public size = input.required<Icon['size']>();\n  public name = input.required<Icon['name']>();\n\n  protected paths = computed(() => icons.find(({name}) => name === this.name())?.paths);\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\nimport { type IconName, icons } from './icon.interface';\n\nexport interface Icon {\n  color?: string;\n  size: number;\n  name: IconName;\n}\n\n@Component({\n  selector: 'app-icon',\n  template: `\n    <svg viewBox=\"0 -960 960 960\">\n      @for (path of paths(); track $index) {\n        <path [attr.d]=\"path.d\"></path>\n      }\n    </svg>\n  `,\n  styles: `\n    :host {\n      display: flex;\n    }\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.fill]': 'color()',\n    '[style.width]': 'size() + \"px\"',\n    '[style.height]': 'size() + \"px\"',\n  }\n})\nexport class IconComponent {\n  public color = input<Icon['color']>();\n  public size = input.required<Icon['size']>();\n  public name = input.required<Icon['name']>();\n\n  protected paths = computed(() => icons.find(({name}) => name === this.name())?.paths);\n}\n",
             "properties": [
                 {
                     "name": "color",
@@ -108,7 +117,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "IconName",
-                    "optional": true,
+                    "optional": false,
                     "description": "",
                     "line": 7
                 },
@@ -128,13 +137,46 @@
             "extends": []
         },
         {
-            "name": "InputField",
-            "id": "interface-InputField-0b6cb35fd9eb9ddd8b5f269bd858acb51a455c0bd498ad88c1b303d0cbd6e0b7eb88d3fce48ecf6fabc65bf55c1bd897196dd44eaed22428d20d7a38a0db469d",
-            "file": "src/design-system/input-field/input-field.component.ts",
+            "name": "Modal",
+            "id": "interface-Modal-610a798f9f88b7b097e60cbe9116cafc93b1d8c54b7e70b5281835e123a8464641d5e7a07b3871d15007fef831b5d9227b2347fa2354077819c5611d018c4b62",
+            "file": "src/design-system/modal/modal.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, model, input, output } from '@angular/core';\nimport { FormsModule } from '@angular/forms';\nimport { IconName } from 'design-system/icon/icon.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass } from '@angular/common';\n\nexport interface InputField {\n  value: string;\n  prefix?: IconName;\n  label?: string;\n  id: string;\n  placeholder?: string;\n}\n\n@Component({\n  selector: 'app-input-field',\n  template: `\n    <div class=\"block relative\">\n      <label ></label>\n      @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n      <input\n        [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n        [id]=\"id()\"\n        [name]=\"id()\"\n        [placeholder]=\"placeholder()\"\n        [(ngModel)]=\"value\"\n        (keyup)=\"valueUpdatedEvent()\"/>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [FormsModule, IconComponent, NgClass],\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class InputFieldComponent {\n  public value = model('');\n  public prefix = input<InputField['prefix']>();\n  public id = input.required<InputField['id']>();\n  public placeholder = input<InputField['placeholder']>('');\n  public valueUpdated = output<InputField['value']>();\n\n  valueUpdatedEvent(): void {\n    this.valueUpdated.emit(this.value())\n  }\n}\n",
+            "sourceCode": "import { Component, model, output } from '@angular/core';\nimport { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';\nimport { CommonModule } from '@angular/common';\nimport { ReactiveFormsModule } from '@angular/forms';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { ButtonComponent } from 'design-system/button/button.component';\nimport type { User } from 'shared/db-models.interface';\n\nconst initialItem: User = {\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n};\n\nexport interface Modal {\n  isOpen: boolean;\n  form: User;\n}\n\n@Component({\n  selector: 'app-modal',\n  templateUrl: 'modal.component.html',\n  styleUrl: 'modal.component.scss',\n  standalone: true,\n  imports: [CommonModule, ReactiveFormsModule, AppTitleComponent, IconComponent, ButtonComponent]\n})\n\nexport class ModalComponent {\n  public isOpen = model<Modal['isOpen']>(false);\n  public formSubmit = output<User>();\n  public productToDelete = output<User['id']>();\n  public form!: FormGroup;\n\n  public newItem: boolean = true;\n  public item: User = initialItem;\n\n  constructor(private fb: FormBuilder) {\n    this.form = this.fb.group({\n      name: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^[A-Za-z\\s]+$/)\n      ]),\n      email: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)\n      ]),\n      phone: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^\\+9725[0-9]{8}$/)\n      ]),\n      website: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+\\.[a-zA-Z]{2,}$/)\n      ])\n    });\n  }\n\n  openModal(initialValues?: User) {\n    if (initialValues) {\n      this.item = initialValues;\n      this.newItem = false;\n      this.form.setValue({ name: initialValues.name, email: initialValues.email, phone: initialValues.phone, website: initialValues.website });\n      this.form.get('email')?.disable();\n    } else {\n      this.form.get('email')?.enable();\n    }\n    this.isOpen.set(true);\n  }\n\n  closeModal() {\n    this.form.reset({ name: '', email: '', phone: '', website: ''});\n    this.newItem = true;\n    this.item = initialItem;\n    this.form.get('email')?.disable();\n    this.isOpen.set(false);\n  }\n\n  onSubmit() {\n    if (this.form.valid) {\n      this.formSubmit.emit({...this.item, ...this.form.value});\n      this.closeModal();\n    }\n  }\n\n  deleteProduct() {\n    this.productToDelete.emit(this.item.id)\n    this.closeModal();\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "form",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "isOpen",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "SearchInput",
+            "id": "interface-SearchInput-0c85bad6e191db51e962b0aa59361ecc4a576395e1655abc28b741a7a8f1402fa349ec23318c94e1733f887fdf46df3de0508b070f5e9f945729e6a4efcbf442",
+            "file": "src/design-system/search-input/search-input.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, model, input, output } from '@angular/core';\nimport { FormsModule } from '@angular/forms';\nimport { IconName } from 'design-system/icon/icon.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass } from '@angular/common';\n\nexport interface SearchInput {\n  value: string;\n  prefix?: IconName;\n  label?: string;\n  id: string;\n  placeholder?: string;\n}\n\n@Component({\n  selector: 'app-search-input',\n  template: `\n    <div class=\"block relative\">\n      <label ></label>\n      @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n      <input\n        data-testid=\"search-input\"\n        [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n        [id]=\"id()\"\n        [name]=\"id()\"\n        [placeholder]=\"placeholder()\"\n        [(ngModel)]=\"value\"\n        (keyup)=\"valueUpdatedEvent()\"/>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [FormsModule, IconComponent, NgClass],\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class SearchInputComponent {\n  public value = model('');\n  public prefix = input<SearchInput['prefix']>();\n  public id = input.required<SearchInput['id']>();\n  public placeholder = input<SearchInput['placeholder']>('');\n  public valueUpdated = output<SearchInput['value']>();\n\n  valueUpdatedEvent(): void {\n    this.valueUpdated.emit(this.value())\n  }\n}\n",
             "properties": [
                 {
                     "name": "id",
@@ -188,31 +230,22 @@
             "extends": []
         },
         {
-            "name": "Modal",
-            "id": "interface-Modal-60a1fd37bf1cf05d26a594933921ec5478ede2ff51aeb3905fa60a5c1272d5a1138db79ac8ed64fc8539e83700ee156ec94e2dc39eef80d3b8150380b254a761",
-            "file": "src/design-system/modal/modal.component.ts",
+            "name": "Table",
+            "id": "interface-Table-37e3fff10be33977d3f2565324cda0e31f328dc001f5a6a3b9d2e9aa4cc47f26f0cea2442523e9009020ca1585b973fc2fa520253db256583aef60bafadc19db",
+            "file": "src/design-system/table/table.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { Component, model, output } from '@angular/core';\nimport { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';\nimport { CommonModule } from '@angular/common';\nimport { ReactiveFormsModule } from '@angular/forms';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { ButtonComponent } from 'design-system/button/button.component';\nimport type { User } from 'shared/db-models.interface';\n\nconst initialItem: User = {\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n};\n\nexport interface Modal {\n  isOpen: boolean;\n  form: User;\n}\n\n@Component({\n  selector: 'app-modal',\n  templateUrl: 'modal.component.html',\n  styleUrl: 'modal.component.scss',\n  standalone: true,\n  imports: [CommonModule, ReactiveFormsModule, AppTitleComponent, IconComponent, ButtonComponent]\n})\n\nexport class ModalComponent {\n  public isOpen = model<Modal['isOpen']>(false);\n  public formSubmit = output<User>();\n  public productToDelete = output<User['id']>();\n  public form!: FormGroup;\n\n  public newItem: boolean = true;\n  public item: User = initialItem;\n\n  constructor(private fb: FormBuilder) {\n    this.form = this.fb.group({\n      name: new FormControl('', Validators.required),\n      email: new FormControl('',Validators.required),\n      phone: new FormControl('',Validators.required),\n      website: new FormControl('',Validators.required)\n    });\n  }\n\n  openModal(initialValues?: User) {\n    if (initialValues) {\n      this.item = initialValues;\n      this.newItem = false;\n      this.form.setValue({ name: initialValues.name, email: initialValues.email, phone: initialValues.phone, website: initialValues.website });\n    }\n    this.isOpen.set(true);\n  }\n\n  closeModal() {\n    this.form.reset({ name: '', email: '', phone: '', website: ''});\n    this.newItem = true;\n    this.item = initialItem;\n    this.isOpen.set(false);\n  }\n\n  onSubmit() {\n    if (this.form.valid) {\n      this.formSubmit.emit({...this.item, ...this.form.value});\n      this.closeModal();\n    }\n  }\n\n  deleteProduct() {\n    this.productToDelete.emit(this.item.id)\n    this.closeModal();\n  }\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TableHeaderComponent } from './header/table-header.component';\nimport { TableRowComponent } from './row/table-row.component';\nimport { TablePaginatorComponent } from './paginator/table-pagination.component';\nimport type { User } from 'shared/db-models.interface';\nimport { AppTitleComponent } from 'design-system/title/title.component';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-table',\n  templateUrl: 'table.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TableHeaderComponent, TableRowComponent, TablePaginatorComponent, AppTitleComponent],\n  standalone: true\n})\nexport class TableComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
             "properties": [
                 {
-                    "name": "form",
+                    "name": "items",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "User",
+                    "type": "User[]",
                     "optional": false,
                     "description": "",
-                    "line": 19
-                },
-                {
-                    "name": "isOpen",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "boolean",
-                    "optional": false,
-                    "description": "",
-                    "line": 18
+                    "line": 9
                 }
             ],
             "indexSignatures": [],
@@ -222,12 +255,12 @@
         },
         {
             "name": "Table",
-            "id": "interface-Table-3dfbe6f45bad76aef9bfd5e0e5e4e329d08da01e0fabd0c664f4124c2ddeaef1b2ff375ebf4421ccce1121a501b7a8cdbe2a63fc2c12c7990162fa16f81a9ba2",
-            "file": "src/design-system/table/table.component.ts",
+            "id": "interface-Table-c93cf3db0a27c8b2f958670c30d1ae28d4f89c8f52dc1707b8334666aa096a2998b056e1f1dbe12d2960b2b6d6724baa7d81ba4c67a94955b3d3a76e6533fbec-1",
+            "file": "src/design-system/tiles/tiles.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TableHeaderComponent } from './header/table-header.component';\nimport { TableRowComponent } from './row/table-row.component';\nimport { TablePaginatorComponent } from './paginator/table-pagination.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-table',\n  templateUrl: 'table.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TableHeaderComponent, TableRowComponent, TablePaginatorComponent],\n  standalone: true\n})\nexport class TableComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TablePaginatorComponent } from '../table/paginator/table-pagination.component';\nimport { TileCardComponent } from './tile-card/tile-card.component';\nimport type { User } from 'shared/db-models.interface';\nimport { AppTitleComponent } from 'design-system/title/title.component';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-tiles',\n  templateUrl: 'tiles.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TablePaginatorComponent, TileCardComponent, AppTitleComponent],\n  standalone: true\n})\nexport class TilesComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
             "properties": [
                 {
                     "name": "items",
@@ -237,30 +270,6 @@
                     "optional": false,
                     "description": "",
                     "line": 8
-                }
-            ],
-            "indexSignatures": [],
-            "kind": 171,
-            "methods": [],
-            "extends": []
-        },
-        {
-            "name": "Table",
-            "id": "interface-Table-c6617c3a57afe2ecc0d1ac144125d3d7242dd684829585e4bf6e4fbaf70bcc1cdbf18c8a5ebedc01c208f1753ff60ca5d1b43606850b2b6a93fe43e5f422352e-1",
-            "file": "src/design-system/tiles/tiles.component.ts",
-            "deprecated": false,
-            "deprecationMessage": "",
-            "type": "interface",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TablePaginatorComponent } from '../table/paginator/table-pagination.component';\nimport { TileCardComponent } from './tile-card/tile-card.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-tiles',\n  templateUrl: 'tiles.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TablePaginatorComponent, TileCardComponent],\n  standalone: true\n})\nexport class TilesComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
-            "properties": [
-                {
-                    "name": "items",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "User[]",
-                    "optional": false,
-                    "description": "",
-                    "line": 7
                 }
             ],
             "indexSignatures": [],
@@ -321,12 +330,12 @@
         },
         {
             "name": "User",
-            "id": "interface-User-e28da0cfd8181ed6aa2033e751b067a853a28dc0e93970817f63b9938310c47ac1d6528dc121b0222e4d6e77d0e0b4b2d14f0e3956127d3cf2002be7a6d1b0de",
+            "id": "interface-User-d2f09fbd5914e40705b96268e5f346ecf85446c45c4c8dcee8789231e8871312388d37d3427e8912c3464b9425513c5a792ab8f1199b67a6dff8796b31207bdd",
             "file": "src/shared/db-models.interface.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "export interface User {\n  id?: number | undefined,\n  name: string,\n  username?: string | undefined,\n  email: string,\n  address?: {\n    street: string,\n    suite: string,\n    city: string,\n    zipcode: string,\n    geo: {\n      lat: string,\n      lng: string\n    }\n  } | undefined\n  phone: string,\n  website: string,\n  company?: {\n    name: string,\n    catchPhrase: string,\n    bs: string\n  } | undefined\n}\n\nexport type ViewMode = 'list' | 'grid';\n",
+            "sourceCode": "export interface User {\n  id?: number | undefined,\n  name: string,\n  username?: string | undefined,\n  email: string,\n  address?: {\n    street: string,\n    suite: string,\n    city: string,\n    zipcode: string,\n    geo: {\n      lat: string,\n      lng: string\n    }\n  } | undefined\n  phone: string,\n  website: string,\n  company?: {\n    name: string,\n    catchPhrase: string,\n    bs: string\n  } | undefined\n}\n\nexport type ViewMode = 'list' | 'grid';\n\nexport type UsersState = {\n  users: User[];\n  isLoading: boolean;\n  error: string | null,\n  currentPage: number;\n  usersPerPage: number,\n  sortDirection: 'asc' | 'des',\n  sortField: keyof User,\n  filter: string,\n  view: ViewMode\n}\n",
             "properties": [
                 {
                     "name": "address",
@@ -651,7 +660,7 @@
         },
         {
             "name": "ButtonComponent",
-            "id": "component-ButtonComponent-1ee8125bf70b13d3b121a8e616c03320a1bbd93dac89a3ac78e765f1c9d7dd86c40dc59d5046632ffabb82654887bef016e6855604db228ed743c35224ff89dd",
+            "id": "component-ButtonComponent-78b1c874b17ba9927d48bb5e5aeb1404b07daac77f6a0fb7136f652d73b2555e5fae0fac4351f538b749b4d5b53ec5b9eb3bb2b35ae3058b782bec34dbd253b6",
             "file": "src/design-system/button/button.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -662,7 +671,7 @@
             "selector": "app-button",
             "styleUrls": [],
             "styles": [],
-            "template": "<button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"_color()\">\n  @if (icon()) {\n    <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()\"/>\n    }\n  <p [ngClass]=\"_color()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n</button>\n",
+            "template": "<button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"disabled()? 'grey' : _color()\" [style.borderColor]=\"disabled()? 'grey' : _color()\" [disabled]=\"disabled()\">\n  @if (icon()) {\n      <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()!\"/>\n    }\n  @if (content()) {\n    <p [ngClass]=\"_color() || disabled()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n  }\n</button>\n",
             "templateUrl": [],
             "viewProviders": [],
             "hostDirectives": [],
@@ -677,7 +686,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 32,
+                    "line": 36,
                     "modifierKind": [
                         124
                     ]
@@ -690,7 +699,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 28,
+                    "line": 31,
                     "modifierKind": [
                         125
                     ]
@@ -703,7 +712,20 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 30,
+                    "line": 34,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "disabled",
+                    "defaultValue": "input<Button['disabled']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 33,
                     "modifierKind": [
                         125
                     ]
@@ -716,7 +738,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 31,
+                    "line": 35,
                     "modifierKind": [
                         125
                     ]
@@ -729,7 +751,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 29,
+                    "line": 32,
                     "modifierKind": [
                         125
                     ]
@@ -742,7 +764,7 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 34,
+                    "line": 38,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -755,7 +777,7 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 38,
+                    "line": 42,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -784,7 +806,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, ViewChild, computed, input } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass, UpperCasePipe } from '@angular/common';\nimport { IconName } from 'design-system/icon/icon.interface';\n\nexport interface Button {\n  type?: string;\n  color?: string;\n  content?: string;\n  icon?: IconName;\n}\n\n@Component({\n  selector: 'app-button',\n  template: `\n    <button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"_color()\">\n      @if (icon()) {\n        <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()\"/>\n        }\n      <p [ngClass]=\"_color()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n    </button>\n  `,\n  imports: [IconComponent, NgClass, UpperCasePipe],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true\n})\nexport class ButtonComponent {\n  public color = input<Button['color']>();\n  public type = input<Button['type']>();\n  public content = input<Button['content']>();\n  public icon = input<Button['icon']>();\n  protected _color = computed(() => this.color());\n\n  protected buttonClasses(): string {\n    return `py-3 px-10 border-2 flex items-center gap-2`\n  }\n\n  protected iconClasses(): string {\n    return this.color() ? \"fill-white\": \"fill-app-font-color\"\n  }\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, ViewChild, computed, input } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass, UpperCasePipe } from '@angular/common';\nimport { IconName } from 'design-system/icon/icon.interface';\n\nexport interface Button {\n  type?: string;\n  color?: string;\n  content?: string;\n  icon?: IconName;\n  disabled?: boolean;\n}\n\n@Component({\n  selector: 'app-button',\n  template: `\n    <button [ngClass]=\"buttonClasses()\" [type]=\"type()\" [style.backgroundColor]=\"disabled()? 'grey' : _color()\" [style.borderColor]=\"disabled()? 'grey' : _color()\" [disabled]=\"disabled()\">\n      @if (icon()) {\n          <app-icon [size]=\"16\" [ngClass]=\"iconClasses()\" [name]=\"icon()!\"/>\n        }\n      @if (content()) {\n        <p [ngClass]=\"_color() || disabled()? 'text-white': 'text-app-font-color'\">{{ content() | uppercase }}</p>\n      }\n    </button>\n  `,\n  imports: [IconComponent, NgClass, UpperCasePipe],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true\n})\nexport class ButtonComponent {\n  public color = input<Button['color']>();\n  public type = input<Button['type']>();\n  public disabled = input<Button['disabled']>();\n  public content = input<Button['content']>();\n  public icon = input<Button['icon']>();\n  protected _color = computed(() => this.color());\n\n  protected buttonClasses(): string {\n    return `py-2 px-6 border-2 flex items-center gap-2 rounded`\n  }\n\n  protected iconClasses(): string {\n    return this.color() ? \"fill-white\": \"fill-app-font-color\"\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -792,7 +814,7 @@
         },
         {
             "name": "IconComponent",
-            "id": "component-IconComponent-30b6a1833f925049276137534ef7812651206474c5ed5fb943e014469a02411251fef01c1d9a919aa4f46c57b52e795f61955a1e707474c3ecbed0022c808800",
+            "id": "component-IconComponent-932716486118b6cd4878f2bf80af4f83f3410bc097e5bdeb37565c211e1ee1502446df969f41d33706c6e40950969ba9e41bca9c6646c62424416af923fab933",
             "file": "src/design-system/icon/icon.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -876,141 +898,15 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\nimport { type IconName, icons } from './icon.interface';\n\nexport interface Icon {\n  color?: string;\n  size: number;\n  name?: IconName;\n}\n\n@Component({\n  selector: 'app-icon',\n  template: `\n    <svg viewBox=\"0 -960 960 960\">\n      @for (path of paths(); track $index) {\n        <path [attr.d]=\"path.d\"></path>\n      }\n    </svg>\n  `,\n  styles: `\n    :host {\n      display: flex;\n    }\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.fill]': 'color()',\n    '[style.width]': 'size() + \"px\"',\n    '[style.height]': 'size() + \"px\"',\n  }\n})\nexport class IconComponent {\n  public color = input<Icon['color']>();\n  public size = input.required<Icon['size']>();\n  public name = input.required<Icon['name']>();\n\n  protected paths = computed(() => icons.find(({name}) => name === this.name())?.paths);\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';\nimport { type IconName, icons } from './icon.interface';\n\nexport interface Icon {\n  color?: string;\n  size: number;\n  name: IconName;\n}\n\n@Component({\n  selector: 'app-icon',\n  template: `\n    <svg viewBox=\"0 -960 960 960\">\n      @for (path of paths(); track $index) {\n        <path [attr.d]=\"path.d\"></path>\n      }\n    </svg>\n  `,\n  styles: `\n    :host {\n      display: flex;\n    }\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  standalone: true,\n  host: {\n    '[style.fill]': 'color()',\n    '[style.width]': 'size() + \"px\"',\n    '[style.height]': 'size() + \"px\"',\n  }\n})\nexport class IconComponent {\n  public color = input<Icon['color']>();\n  public size = input.required<Icon['size']>();\n  public name = input.required<Icon['name']>();\n\n  protected paths = computed(() => icons.find(({name}) => name === this.name())?.paths);\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "\n    :host {\n      display: flex;\n    }\n  \n",
             "extends": []
         },
         {
-            "name": "InputFieldComponent",
-            "id": "component-InputFieldComponent-0b6cb35fd9eb9ddd8b5f269bd858acb51a455c0bd498ad88c1b303d0cbd6e0b7eb88d3fce48ecf6fabc65bf55c1bd897196dd44eaed22428d20d7a38a0db469d",
-            "file": "src/design-system/input-field/input-field.component.ts",
-            "changeDetection": "ChangeDetectionStrategy.OnPush",
-            "encapsulation": [],
-            "entryComponents": [],
-            "host": {},
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "app-input-field",
-            "styleUrls": [],
-            "styles": [],
-            "template": "<div class=\"block relative\">\n  <label ></label>\n  @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n  <input\n    [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n    [id]=\"id()\"\n    [name]=\"id()\"\n    [placeholder]=\"placeholder()\"\n    [(ngModel)]=\"value\"\n    (keyup)=\"valueUpdatedEvent()\"/>\n</div>\n",
-            "templateUrl": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [],
-            "outputsClass": [],
-            "propertiesClass": [
-                {
-                    "name": "id",
-                    "defaultValue": "input.required<InputField['id']>()",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 40,
-                    "modifierKind": [
-                        125
-                    ]
-                },
-                {
-                    "name": "placeholder",
-                    "defaultValue": "input<InputField['placeholder']>('')",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 41,
-                    "modifierKind": [
-                        125
-                    ]
-                },
-                {
-                    "name": "prefix",
-                    "defaultValue": "input<InputField['prefix']>()",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 39,
-                    "modifierKind": [
-                        125
-                    ]
-                },
-                {
-                    "name": "value",
-                    "defaultValue": "model('')",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 38,
-                    "modifierKind": [
-                        125
-                    ]
-                },
-                {
-                    "name": "valueUpdated",
-                    "defaultValue": "output<InputField['value']>()",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 42,
-                    "modifierKind": [
-                        125
-                    ]
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "valueUpdatedEvent",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 44,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                }
-            ],
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "FormsModule",
-                    "type": "module"
-                },
-                {
-                    "name": "IconComponent",
-                    "type": "component"
-                },
-                {
-                    "name": "NgClass"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, model, input, output } from '@angular/core';\nimport { FormsModule } from '@angular/forms';\nimport { IconName } from 'design-system/icon/icon.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass } from '@angular/common';\n\nexport interface InputField {\n  value: string;\n  prefix?: IconName;\n  label?: string;\n  id: string;\n  placeholder?: string;\n}\n\n@Component({\n  selector: 'app-input-field',\n  template: `\n    <div class=\"block relative\">\n      <label ></label>\n      @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n      <input\n        [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n        [id]=\"id()\"\n        [name]=\"id()\"\n        [placeholder]=\"placeholder()\"\n        [(ngModel)]=\"value\"\n        (keyup)=\"valueUpdatedEvent()\"/>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [FormsModule, IconComponent, NgClass],\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class InputFieldComponent {\n  public value = model('');\n  public prefix = input<InputField['prefix']>();\n  public id = input.required<InputField['id']>();\n  public placeholder = input<InputField['placeholder']>('');\n  public valueUpdated = output<InputField['value']>();\n\n  valueUpdatedEvent(): void {\n    this.valueUpdated.emit(this.value())\n  }\n}\n",
-            "assetsDirs": [],
-            "styleUrlsData": "",
-            "stylesData": "",
-            "extends": []
-        },
-        {
             "name": "ModalComponent",
-            "id": "component-ModalComponent-60a1fd37bf1cf05d26a594933921ec5478ede2ff51aeb3905fa60a5c1272d5a1138db79ac8ed64fc8539e83700ee156ec94e2dc39eef80d3b8150380b254a761",
+            "id": "component-ModalComponent-610a798f9f88b7b097e60cbe9116cafc93b1d8c54b7e70b5281835e123a8464641d5e7a07b3871d15007fef831b5d9227b2347fa2354077819c5611d018c4b62",
             "file": "src/design-system/modal/modal.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1127,7 +1023,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 57,
+                    "line": 72,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1137,7 +1033,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 71,
+                    "line": 87,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1147,7 +1043,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 64,
+                    "line": 80,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1165,7 +1061,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 48,
+                    "line": 60,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1212,7 +1108,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, model, output } from '@angular/core';\nimport { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';\nimport { CommonModule } from '@angular/common';\nimport { ReactiveFormsModule } from '@angular/forms';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { ButtonComponent } from 'design-system/button/button.component';\nimport type { User } from 'shared/db-models.interface';\n\nconst initialItem: User = {\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n};\n\nexport interface Modal {\n  isOpen: boolean;\n  form: User;\n}\n\n@Component({\n  selector: 'app-modal',\n  templateUrl: 'modal.component.html',\n  styleUrl: 'modal.component.scss',\n  standalone: true,\n  imports: [CommonModule, ReactiveFormsModule, AppTitleComponent, IconComponent, ButtonComponent]\n})\n\nexport class ModalComponent {\n  public isOpen = model<Modal['isOpen']>(false);\n  public formSubmit = output<User>();\n  public productToDelete = output<User['id']>();\n  public form!: FormGroup;\n\n  public newItem: boolean = true;\n  public item: User = initialItem;\n\n  constructor(private fb: FormBuilder) {\n    this.form = this.fb.group({\n      name: new FormControl('', Validators.required),\n      email: new FormControl('',Validators.required),\n      phone: new FormControl('',Validators.required),\n      website: new FormControl('',Validators.required)\n    });\n  }\n\n  openModal(initialValues?: User) {\n    if (initialValues) {\n      this.item = initialValues;\n      this.newItem = false;\n      this.form.setValue({ name: initialValues.name, email: initialValues.email, phone: initialValues.phone, website: initialValues.website });\n    }\n    this.isOpen.set(true);\n  }\n\n  closeModal() {\n    this.form.reset({ name: '', email: '', phone: '', website: ''});\n    this.newItem = true;\n    this.item = initialItem;\n    this.isOpen.set(false);\n  }\n\n  onSubmit() {\n    if (this.form.valid) {\n      this.formSubmit.emit({...this.item, ...this.form.value});\n      this.closeModal();\n    }\n  }\n\n  deleteProduct() {\n    this.productToDelete.emit(this.item.id)\n    this.closeModal();\n  }\n}\n",
+            "sourceCode": "import { Component, model, output } from '@angular/core';\nimport { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';\nimport { CommonModule } from '@angular/common';\nimport { ReactiveFormsModule } from '@angular/forms';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { ButtonComponent } from 'design-system/button/button.component';\nimport type { User } from 'shared/db-models.interface';\n\nconst initialItem: User = {\n  name: '',\n  email: '',\n  phone: '',\n  website: ''\n};\n\nexport interface Modal {\n  isOpen: boolean;\n  form: User;\n}\n\n@Component({\n  selector: 'app-modal',\n  templateUrl: 'modal.component.html',\n  styleUrl: 'modal.component.scss',\n  standalone: true,\n  imports: [CommonModule, ReactiveFormsModule, AppTitleComponent, IconComponent, ButtonComponent]\n})\n\nexport class ModalComponent {\n  public isOpen = model<Modal['isOpen']>(false);\n  public formSubmit = output<User>();\n  public productToDelete = output<User['id']>();\n  public form!: FormGroup;\n\n  public newItem: boolean = true;\n  public item: User = initialItem;\n\n  constructor(private fb: FormBuilder) {\n    this.form = this.fb.group({\n      name: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^[A-Za-z\\s]+$/)\n      ]),\n      email: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)\n      ]),\n      phone: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^\\+9725[0-9]{8}$/)\n      ]),\n      website: new FormControl('', [\n        Validators.required,\n        Validators.pattern(/^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+\\.[a-zA-Z]{2,}$/)\n      ])\n    });\n  }\n\n  openModal(initialValues?: User) {\n    if (initialValues) {\n      this.item = initialValues;\n      this.newItem = false;\n      this.form.setValue({ name: initialValues.name, email: initialValues.email, phone: initialValues.phone, website: initialValues.website });\n      this.form.get('email')?.disable();\n    } else {\n      this.form.get('email')?.enable();\n    }\n    this.isOpen.set(true);\n  }\n\n  closeModal() {\n    this.form.reset({ name: '', email: '', phone: '', website: ''});\n    this.newItem = true;\n    this.item = initialItem;\n    this.form.get('email')?.disable();\n    this.isOpen.set(false);\n  }\n\n  onSubmit() {\n    if (this.form.valid) {\n      this.formSubmit.emit({...this.item, ...this.form.value});\n      this.closeModal();\n    }\n  }\n\n  deleteProduct() {\n    this.productToDelete.emit(this.item.id)\n    this.closeModal();\n  }\n}\n",
             "styleUrl": "modal.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -1244,11 +1140,137 @@
                 ]
             },
             "extends": [],
-            "templateData": "@if (isOpen()) {\n<div class=\"fixed flex top-0 left-0 w-full h-full justify-end\" (click)=\"closeModal()\">\n  <div class=\"w-2/5 bg-app-modal-bg shadow-xl px-20 py-10 flex flex-col h-100\" (click)=\"$event.stopPropagation()\">\n    <div class=\"flex mb-10 justify-between\">\n      <app-title [content]=\"newItem ? 'Create New' : 'Update'\" size=\"large\" />\n      <button (click)=\"closeModal()\">\n        <app-icon name=\"close\" [size]=\"32\" class=\"fill-app-bluish\" />\n      </button>\n    </div>\n    <form [formGroup]=\"form\" class=\"flex-1 flex flex-col gap-3\">\n      <div class=\"flex gap-3\">\n        <div class=\"flex-1\">\n          <label for=\"name\">Name</label>\n          <input #autofocus id=\"name\" type=\"text\" name=\"name\" formControlName=\"name\" placeholder=\"Type the name...\">\n        </div>\n        <div class=\"flex-1\">\n          <label for=\"email\">Email</label>\n          <input id=\"email\" type=\"number\" name=\"email\" formControlName=\"email\" placeholder=\"Type the price\">\n        </div>\n      </div>\n      <div>\n        <label for=\"phone\">Phone</label>\n        <input class=\"w-10 h-10\" id=\"phone\" name=\"phone\" type=\"text\" formControlName=\"phone\">\n      </div>\n      <div>\n        <label for=\"website\">Website</label>\n        <input class=\"w-10 h-10\" id=\"website\" name=\"website\" type=\"text\" formControlName=\"website\">\n      </div>\n      <div class=\"flex justify-between mt-auto\">\n        <app-button content=\"cancel\" (click)=\"closeModal()\"/>\n        <app-button type=\"submit\" content=\"save\" icon=\"save\" color=\"green\" (click)=\"onSubmit()\"/>\n        @if (!newItem) {\n          <app-button content=\"delete\" icon=\"delete\" color=\"red\" (click)=\"deleteProduct()\"/>\n        }\n      </div>\n    </form>\n  </div>\n</div>\n}\n"
+            "templateData": "@if (isOpen()) {\n<div class=\"fixed flex top-0 left-0 w-full h-full justify-end\" (click)=\"closeModal()\" data-testid=\"user-modal\">\n  <div class=\"w-full sm:w-4/5 md:w-2/3 lg:w-1/2 xl:w-2/5 bg-app-modal-bg shadow-xl px-7 sm:px-20 py-10 flex flex-col h-100\" (click)=\"$event.stopPropagation()\">\n    <div class=\"flex mb-10 justify-between\">\n      <app-title [content]=\"newItem ? 'Create New' : 'Update'\" size=\"large\" />\n      <button (click)=\"closeModal()\">\n        <app-icon name=\"close\" [size]=\"32\" class=\"fill-app-bluish\" />\n      </button>\n    </div>\n    <form [formGroup]=\"form\" class=\"flex-1 flex flex-col gap-3\">\n      <div class=\"flex gap-3\">\n        <div class=\"flex-1\">\n          <label for=\"name\">Name</label>\n          <input id=\"name\" formControlName=\"name\" [ngClass]=\"{'border-red-500 bg-red-100': form.get('name')?.invalid && form.get('name')?.touched}\" placeholder=\"Enter a name\" data-testid=\"user-form-name\">\n          <ng-container *ngTemplateOutlet=\"errorTemplate; context: {control: form.get('name')}\"></ng-container>\n        </div>\n        <div class=\"flex-1\">\n          <label for=\"email\">Email</label>\n          <input id=\"email\" type=\"email\" name=\"email\" formControlName=\"email\" [ngClass]=\"{'border-red-500 bg-red-100': form.get('email')?.invalid && form.get('email')?.touched}\" placeholder=\"Type the email...\" data-testid=\"user-form-email\">\n          <ng-container *ngTemplateOutlet=\"errorTemplate; context: {control: form.get('email')}\"></ng-container>\n        </div>\n      </div>\n      <div>\n        <label for=\"phone\">Phone</label>\n        <input id=\"phone\" formControlName=\"phone\" [ngClass]=\"{'border-red-500 bg-red-100': form.get('phone')?.invalid && form.get('phone')?.touched}\" placeholder=\"Enter phone number\" data-testid=\"user-form-phone\">\n        <ng-container *ngTemplateOutlet=\"errorTemplate; context: {control: form.get('phone')}\"></ng-container>\n      </div>\n      <div>\n        <label for=\"website\">Website</label>\n        <input id=\"website\" formControlName=\"website\" [ngClass]=\"{'border-red-500 bg-red-100': form.get('website')?.invalid && form.get('website')?.touched}\" placeholder=\"Enter a website\" data-testid=\"user-form-website\">\n        <ng-container *ngTemplateOutlet=\"errorTemplate; context: {control: form.get('website')}\"></ng-container>\n      </div>\n      <div class=\"flex justify-between mt-auto\">\n        <app-button content=\"cancel\" (click)=\"closeModal()\"/>\n        <app-button type=\"submit\" content=\"save\" icon=\"save\" color=\"green\" (click)=\"onSubmit()\" [disabled]=\"form.invalid\" data-testid=\"user-form-save\"/>\n        @if (!newItem) {\n          <app-button content=\"delete\" icon=\"delete\" color=\"red\" (click)=\"deleteProduct()\" data-testid=\"user-form-delete\"/>\n        }\n      </div>\n    </form>\n  </div>\n</div>\n}\n\n\n<ng-template #errorTemplate let-control=\"control\">\n  <div *ngIf=\"control.invalid && control.touched\" class=\"text-red-600 text-sm mt-1\">\n    <div *ngIf=\"control.errors?.['required']\">This field is required</div>\n    <div *ngIf=\"control.errors?.['pattern']\">Invalid format</div>\n  </div>\n</ng-template>\n"
+        },
+        {
+            "name": "SearchInputComponent",
+            "id": "component-SearchInputComponent-0c85bad6e191db51e962b0aa59361ecc4a576395e1655abc28b741a7a8f1402fa349ec23318c94e1733f887fdf46df3de0508b070f5e9f945729e6a4efcbf442",
+            "file": "src/design-system/search-input/search-input.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "host": {},
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-search-input",
+            "styleUrls": [],
+            "styles": [],
+            "template": "<div class=\"block relative\">\n  <label ></label>\n  @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n  <input\n    data-testid=\"search-input\"\n    [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n    [id]=\"id()\"\n    [name]=\"id()\"\n    [placeholder]=\"placeholder()\"\n    [(ngModel)]=\"value\"\n    (keyup)=\"valueUpdatedEvent()\"/>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "id",
+                    "defaultValue": "input.required<SearchInput['id']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 41,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "placeholder",
+                    "defaultValue": "input<SearchInput['placeholder']>('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 42,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "prefix",
+                    "defaultValue": "input<SearchInput['prefix']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 40,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "model('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 39,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "valueUpdated",
+                    "defaultValue": "output<SearchInput['value']>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 43,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "valueUpdatedEvent",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 45,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "IconComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "NgClass"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, model, input, output } from '@angular/core';\nimport { FormsModule } from '@angular/forms';\nimport { IconName } from 'design-system/icon/icon.interface';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { NgClass } from '@angular/common';\n\nexport interface SearchInput {\n  value: string;\n  prefix?: IconName;\n  label?: string;\n  id: string;\n  placeholder?: string;\n}\n\n@Component({\n  selector: 'app-search-input',\n  template: `\n    <div class=\"block relative\">\n      <label ></label>\n      @if (prefix()!) { <app-icon class=\"absolute inset-y-4 left-0 ml-4\" [name]=\"prefix()!\" [size]=\"32\" color=\"#CBCBCB\" /> }\n      <input\n        data-testid=\"search-input\"\n        [ngClass]=\"{'w-full shadow-md p-5 placeholder:italic placeholder:text-black placeholder:text-base placeholder:font-extralight rounded-lg': true, 'pl-14': !!prefix()}\"\n        [id]=\"id()\"\n        [name]=\"id()\"\n        [placeholder]=\"placeholder()\"\n        [(ngModel)]=\"value\"\n        (keyup)=\"valueUpdatedEvent()\"/>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [FormsModule, IconComponent, NgClass],\n  standalone: true,\n  host: {\n    '[style.display]': '\"block\"'\n  }\n})\nexport class SearchInputComponent {\n  public value = model('');\n  public prefix = input<SearchInput['prefix']>();\n  public id = input.required<SearchInput['id']>();\n  public placeholder = input<SearchInput['placeholder']>('');\n  public valueUpdated = output<SearchInput['value']>();\n\n  valueUpdatedEvent(): void {\n    this.valueUpdated.emit(this.value())\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": []
         },
         {
             "name": "TableComponent",
-            "id": "component-TableComponent-3dfbe6f45bad76aef9bfd5e0e5e4e329d08da01e0fabd0c664f4124c2ddeaef1b2ff375ebf4421ccce1121a501b7a8cdbe2a63fc2c12c7990162fa16f81a9ba2",
+            "id": "component-TableComponent-37e3fff10be33977d3f2565324cda0e31f328dc001f5a6a3b9d2e9aa4cc47f26f0cea2442523e9009020ca1585b973fc2fa520253db256583aef60bafadc19db",
             "file": "src/design-system/table/table.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -1273,7 +1295,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 20,
+                    "line": 21,
                     "modifierKind": [
                         125
                     ],
@@ -1289,7 +1311,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 19,
+                    "line": 20,
                     "modifierKind": [
                         125
                     ]
@@ -1301,7 +1323,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 20,
+                    "line": 21,
                     "modifierKind": [
                         125
                     ],
@@ -1326,21 +1348,25 @@
                 {
                     "name": "TablePaginatorComponent",
                     "type": "component"
+                },
+                {
+                    "name": "AppTitleComponent",
+                    "type": "component"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TableHeaderComponent } from './header/table-header.component';\nimport { TableRowComponent } from './row/table-row.component';\nimport { TablePaginatorComponent } from './paginator/table-pagination.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-table',\n  templateUrl: 'table.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TableHeaderComponent, TableRowComponent, TablePaginatorComponent],\n  standalone: true\n})\nexport class TableComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TableHeaderComponent } from './header/table-header.component';\nimport { TableRowComponent } from './row/table-row.component';\nimport { TablePaginatorComponent } from './paginator/table-pagination.component';\nimport type { User } from 'shared/db-models.interface';\nimport { AppTitleComponent } from 'design-system/title/title.component';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-table',\n  templateUrl: 'table.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TableHeaderComponent, TableRowComponent, TablePaginatorComponent, AppTitleComponent],\n  standalone: true\n})\nexport class TableComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-table-header class=\"mb-3 block\"/>\n@for (item of items(); track item) {\n  <app-table-row [item]=\"item\" class=\"mb-3 block\" (click)=\"updateItem.emit(item)\"/>\n}\n<app-table-paginator/>\n"
+            "templateData": "@if (items().length > 0) {\n  <app-table-header class=\"mb-3 block\"/>\n  @for (item of items(); track item) {\n    <app-table-row [item]=\"item\" class=\"mb-3 block\" (dblclick)=\"updateItem.emit(item)\"/>\n  }\n  <app-table-paginator/>\n} @else {\n  <app-title class=\"text-center\" content=\"No users found\" size=\"small\"/>\n}\n"
         },
         {
             "name": "TableHeaderComponent",
-            "id": "component-TableHeaderComponent-6f295890d1d63f777a7c6510eb08ba573918d593bbaa79c4386f1a9336f23cb1ed48b506e4fe0c49b5759f9338292318d34cd531055520274d06f6f3608d195b",
+            "id": "component-TableHeaderComponent-fc264026a93d2667f900ef93212fb6b3107a19fa7f75522a79183728ddd579e521d7bf598f36acb833ca29853c866f9730edc6a13b72d216394fadf95e86460a",
             "file": "src/design-system/table/header/table-header.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -1359,8 +1385,8 @@
             "outputsClass": [],
             "propertiesClass": [
                 {
-                    "name": "_sort",
-                    "defaultValue": "computed(() => this.store.sort())",
+                    "name": "_sortDirection",
+                    "defaultValue": "computed(() => this.store.sortDirection())",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
@@ -1478,7 +1504,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { patchState } from '@ngrx/signals';\nimport { UsersStore } from 'shared/users.store';\nimport type { User } from 'shared/db-models.interface';\n\n@Component({\n  selector: 'app-table-header',\n  template: `\n    <div class=\"flex flex-row gap-2 w-full font-extralight px-5\">\n      <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('name')\">{{getPrefix('name')}} Name</p>\n      <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('email')\">{{getPrefix('email')}} Email</p>\n      <p class=\"basis-1/4\">Phone</p>\n      <p class=\"basis-1/4\">Website</p>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true\n})\nexport class TableHeaderComponent {\n  readonly store = inject(UsersStore);\n\n  public readonly _sort = computed(() => this.store.sort());\n  public readonly _sortField = computed(() => this.store.sortField());\n\n  protected changeOrder(field: keyof User): void {\n    patchState(this.store, { sort: this._sort() === 'asc' ? 'des' : 'asc', sortField: field })\n  }\n\n  protected getPrefix(field: keyof User): string {\n    return this._sortField() === field ? this._sort() === 'asc' ? '↓' : '↑' : '';\n  }\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { patchState } from '@ngrx/signals';\nimport { UsersStore } from 'shared/users.store';\nimport type { User } from 'shared/db-models.interface';\n\n@Component({\n  selector: 'app-table-header',\n  template: `\n    <div class=\"flex flex-row gap-2 w-full font-extralight px-5\">\n      <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('name')\">{{getPrefix('name')}} Name</p>\n      <p class=\"basis-1/4 cursor-pointer\" (click)=\"changeOrder('email')\">{{getPrefix('email')}} Email</p>\n      <p class=\"basis-1/4\">Phone</p>\n      <p class=\"basis-1/4\">Website</p>\n    </div>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true\n})\nexport class TableHeaderComponent {\n  readonly store = inject(UsersStore);\n\n  public readonly _sortDirection = computed(() => this.store.sortDirection());\n  public readonly _sortField = computed(() => this.store.sortField());\n\n  protected changeOrder(field: keyof User): void {\n    patchState(this.store, { sortDirection: this._sortDirection() === 'asc' ? 'des' : 'asc', sortField: field })\n  }\n\n  protected getPrefix(field: keyof User): string {\n    return this._sortField() === field ? this._sortDirection() === 'asc' ? '↓' : '↑' : '';\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -1486,7 +1512,7 @@
         },
         {
             "name": "TablePaginatorComponent",
-            "id": "component-TablePaginatorComponent-23c36e7161fdc69c0c418d34b9c568f5aa65c6e1c0d21ad54c57b586da3dddd1eb9f70225679f40cb0d59f9176f965b13da413bef4bdf5dace453b09f50bf245",
+            "id": "component-TablePaginatorComponent-9ce7b92afd7b8d6e74f7734765d9c558109d3e8130ba3abdb626406453fd8a6eb356c6b2a284e2f18dca9a5ba5ec378129e9cacb70cdb8e3b95c7115bc355ad0",
             "file": "src/design-system/table/paginator/table-pagination.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -1562,7 +1588,7 @@
             ],
             "methodsClass": [
                 {
-                    "name": "changed",
+                    "name": "itemsPerPageUpdated",
                     "args": [
                         {
                             "name": "event",
@@ -1659,12 +1685,12 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';\nimport { patchState } from '@ngrx/signals';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { UsersStore } from 'shared/users.store';\n\n@Component({\n  selector: 'app-table-paginator',\n  templateUrl: 'table-paginator.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true\n})\nexport class TablePaginatorComponent {\n  readonly store = inject(UsersStore);\n\n  public readonly _currentPage = computed(() => this.store.currentPage());\n  public readonly _itemsPerPage = computed(() => this.store.usersPerPage());\n\n  protected totalPages = computed(() => Math.ceil(this.store.users().length / this._itemsPerPage()) - 1)\n\n  protected changed(event: Event) {\n    const selectElement = event.target as HTMLSelectElement;\n    patchState(this.store, { usersPerPage: +selectElement?.value })\n  }\n  protected nextPage(): void {\n    patchState(this.store, { currentPage: this._currentPage() + 1 })\n  }\n\n  protected previousPage(): void {\n    patchState(this.store, { currentPage: this._currentPage() - 1 })\n  }\n\n  protected toTheStart(): void {\n    patchState(this.store, { currentPage: 0 })\n  }\n\n  protected toTheEnd(): void {\n    patchState(this.store, { currentPage: this.totalPages() })\n  }\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';\nimport { patchState } from '@ngrx/signals';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { UsersStore } from 'shared/users.store';\n\n@Component({\n  selector: 'app-table-paginator',\n  templateUrl: 'table-paginator.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [IconComponent],\n  standalone: true\n})\nexport class TablePaginatorComponent {\n  readonly store = inject(UsersStore);\n\n  public readonly _currentPage = computed(() => this.store.currentPage());\n  public readonly _itemsPerPage = computed(() => this.store.usersPerPage());\n\n  protected totalPages = computed(() => Math.ceil(this.store.users().length / this._itemsPerPage()) - 1)\n\n  protected itemsPerPageUpdated(event: Event) {\n    const selectElement = event.target as HTMLSelectElement;\n    this.store.updatePerPageCount(+selectElement?.value)\n  }\n  protected nextPage(): void {\n    patchState(this.store, { currentPage: this._currentPage() + 1 })\n  }\n\n  protected previousPage(): void {\n    patchState(this.store, { currentPage: this._currentPage() - 1 })\n  }\n\n  protected toTheStart(): void {\n    patchState(this.store, { currentPage: 0 })\n  }\n\n  protected toTheEnd(): void {\n    patchState(this.store, { currentPage: this.totalPages() })\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"flex items-center\">\n  <select class=\"me-2\" id=\"number_of_items\" (change)=\"changed($event)\">\n    <option value=\"5\" [selected]=\"_itemsPerPage() === 5\">5</option>\n    <option value=\"10\" [selected]=\"_itemsPerPage() === 10\">10</option>\n    <option value=\"20\" [selected]=\"_itemsPerPage() === 20\">20</option>\n  </select>\n  <p class=\"flex-1\">Items per page</p>\n  <button [disabled]=\"_currentPage() === 0\" (click)=\"toTheStart()\">\n    <app-icon name=\"first_page\" [size]=\"32\" [color]=\"_currentPage() === 0 ? 'grey': 'black'\" /></button>\n  <button [disabled]=\"_currentPage() === 0\" (click)=\"previousPage()\">\n    <app-icon name=\"arrow_left\" [size]=\"32\" [color]=\"_currentPage() === 0 ? 'grey': 'black'\" /></button>\n  <p>{{_currentPage() + 1}}</p>\n  <button [disabled]=\"_currentPage() === totalPages()\" (click)=\"nextPage()\">\n    <app-icon name=\"arrow_right\" [size]=\"32\" [color]=\"_currentPage() === totalPages() ? 'grey': 'black'\" /></button>\n  <button [disabled]=\"_currentPage() === totalPages()\" (click)=\"toTheEnd()\">\n    <app-icon name=\"last_page\" [size]=\"32\" [color]=\"_currentPage() === totalPages() ? 'grey': 'black'\" /></button>\n</div>\n"
+            "templateData": "<div class=\"flex items-center\">\n  <select class=\"me-2\" id=\"number_of_items\" (change)=\"itemsPerPageUpdated($event)\">\n    <option value=\"5\" [selected]=\"_itemsPerPage() === 5\">5</option>\n    <option value=\"10\" [selected]=\"_itemsPerPage() === 10\">10</option>\n    <option value=\"20\" [selected]=\"_itemsPerPage() === 20\">20</option>\n  </select>\n  <p class=\"flex-1\">Items per page</p>\n  <button [disabled]=\"_currentPage() === 0\" (click)=\"toTheStart()\">\n    <app-icon name=\"first_page\" [size]=\"32\" [color]=\"_currentPage() === 0 ? 'grey': 'black'\" /></button>\n  <button [disabled]=\"_currentPage() === 0\" (click)=\"previousPage()\">\n    <app-icon name=\"arrow_left\" [size]=\"32\" [color]=\"_currentPage() === 0 ? 'grey': 'black'\" /></button>\n  <p>{{_currentPage() + 1}}</p>\n  <button [disabled]=\"_currentPage() === totalPages()\" (click)=\"nextPage()\">\n    <app-icon name=\"arrow_right\" [size]=\"32\" [color]=\"_currentPage() === totalPages() ? 'grey': 'black'\" /></button>\n  <button [disabled]=\"_currentPage() === totalPages()\" (click)=\"toTheEnd()\">\n    <app-icon name=\"last_page\" [size]=\"32\" [color]=\"_currentPage() === totalPages() ? 'grey': 'black'\" /></button>\n</div>\n"
         },
         {
             "name": "TableRowComponent",
@@ -1725,7 +1751,7 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"flex flex-row items-center gap-2 w-full font-extralight bg-white shadow-md rounded-lg p-5 hover:bg-gray-50 cursor-pointer\">\n  <p class=\"basis-1/4 truncate font-bold\">{{ item().name }}</p>\n  <a class=\"basis-1/4 truncate\" [href]=\"'mailto:' + item().email\">{{ item().email }}</a>\n  <a class=\"basis-1/4 truncate\" [href]=\"'tel:+' + item().phone\">{{ item().phone }}</a>\n  <a class=\"basis-1/4 truncate\" [href]=\"'http://' + item().website\" target=\"_blank\">{{ item().website }}</a>\n</div>\n"
+            "templateData": "<div class=\"flex flex-row items-center gap-2 w-full font-extralight bg-white shadow-md rounded-lg p-5 hover:bg-gray-50 cursor-pointer\" data-testid=\"user-row\">\n  <div class=\"basis-1/4 truncate font-bold\">\n    <p>{{ item().name }}</p>\n  </div>\n  <div class=\"basis-1/4 truncate\">\n    <a [href]=\"'mailto:' + item().email\">{{ item().email }}</a>\n  </div>\n  <div class=\"basis-1/4 truncate\">\n    <a [href]=\"'tel:+' + item().phone\">{{ item().phone }}</a>\n  </div>\n  <div class=\"basis-1/4 truncate\">\n    <a class=\"text-app-blue hover:underline visited:text-app-bluish\" [href]=\"'http://' + item().website\" target=\"_blank\">{{ item().website }}</a>\n  </div>\n</div>\n"
         },
         {
             "name": "TileCardComponent",
@@ -1783,11 +1809,11 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"shadow-md flex flex-col justify-end h-full bg-white hover:bg-gray-50 cursor-pointer\">\n  <div class=\"p-3 bg-app-modal-bg h-full flex items-center justify-center\">\n    <p class=\"text-center\">{{ item().name }}</p>\n  </div>\n  <div class=\"flex flex-col gap-3 p-3\">\n    <div class=\"flex justify-between\">\n      <div class=\"text-end\">\n        <p>Price</p>\n        <p class=\"basis-2/12 text-black font-black\">{{ item().email }}$</p>\n      </div>\n    </div>\n  </div>\n</div>\n"
+            "templateData": "<div class=\"shadow-md flex flex-col h-full bg-white hover:bg-gray-50 cursor-pointer items-start\" data-testid=\"user-tile\">\n  <div class=\"p-3 bg-app-modal-bg flex items-center justify-center self-stretch\">\n    <p class=\"text-center font-bold\">{{ item().name }}</p>\n  </div>\n  <p></p>\n  <div class=\"flex flex-col gap-3 p-3 truncate\">\n    <p class=\"font-bold\">Email</p>\n    <a [href]=\"'mailto:' + item().email\">{{ item().email }}</a>\n    <p class=\"font-bold\">Phone</p>\n    <a [href]=\"'tel:+' + item().phone\">{{ item().phone }}</a>\n    <p class=\"font-bold\">Website</p>\n    <a class=\"text-app-blue hover:underline visited:text-app-bluish\" [href]=\"'http://' + item().website\" target=\"_blank\">{{ item().website }}</a>\n  </div>\n</div>\n"
         },
         {
             "name": "TilesComponent",
-            "id": "component-TilesComponent-c6617c3a57afe2ecc0d1ac144125d3d7242dd684829585e4bf6e4fbaf70bcc1cdbf18c8a5ebedc01c208f1753ff60ca5d1b43606850b2b6a93fe43e5f422352e",
+            "id": "component-TilesComponent-c93cf3db0a27c8b2f958670c30d1ae28d4f89c8f52dc1707b8334666aa096a2998b056e1f1dbe12d2960b2b6d6724baa7d81ba4c67a94955b3d3a76e6533fbec",
             "file": "src/design-system/tiles/tiles.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -1812,7 +1838,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 19,
+                    "line": 20,
                     "modifierKind": [
                         125
                     ],
@@ -1828,7 +1854,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 18,
+                    "line": 19,
                     "modifierKind": [
                         125
                     ]
@@ -1840,7 +1866,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 19,
+                    "line": 20,
                     "modifierKind": [
                         125
                     ],
@@ -1861,21 +1887,25 @@
                 {
                     "name": "TileCardComponent",
                     "type": "component"
+                },
+                {
+                    "name": "AppTitleComponent",
+                    "type": "component"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TablePaginatorComponent } from '../table/paginator/table-pagination.component';\nimport { TileCardComponent } from './tile-card/tile-card.component';\nimport type { User } from 'shared/db-models.interface';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-tiles',\n  templateUrl: 'tiles.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TablePaginatorComponent, TileCardComponent],\n  standalone: true\n})\nexport class TilesComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\nimport { TablePaginatorComponent } from '../table/paginator/table-pagination.component';\nimport { TileCardComponent } from './tile-card/tile-card.component';\nimport type { User } from 'shared/db-models.interface';\nimport { AppTitleComponent } from 'design-system/title/title.component';\n\nexport interface Table {\n  items: User[];\n}\n\n@Component({\n  selector: 'app-tiles',\n  templateUrl: 'tiles.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  imports: [TablePaginatorComponent, TileCardComponent, AppTitleComponent],\n  standalone: true\n})\nexport class TilesComponent {\n  public items = input.required<Table['items']>();\n  public updateItem = output<User>();\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"grid gap-5 grid-cols-4\">\n  @for (item of items(); track item) {\n    <app-tile-card [item]=\"item\" class=\"mb-3 block\" (click)=\"updateItem.emit(item)\"/>\n  }\n</div>\n<app-table-paginator/>\n"
+            "templateData": "@if (items().length > 0) {\n  <div class=\"grid gap-5 grid-cols-1 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2\">\n    @for (item of items(); track item) {\n      <app-tile-card [item]=\"item\" class=\"mb-3 block\" (dblclick)=\"updateItem.emit(item)\"/>\n    }\n  </div>\n  <app-table-paginator/>\n} @else {\n  <app-title class=\"text-center\" content=\"No users found\" size=\"small\"/>\n}\n"
         },
         {
             "name": "UserManagementComponent",
-            "id": "component-UserManagementComponent-b204d9517031201d2325eccc159541339cbe6a39c4e1bb258b0ae9b584eb5bd7e9241e7cebf983aa7c7e6a4aa5c748c354db487627f7f46af48aecff0d8a9ee3",
+            "id": "component-UserManagementComponent-09253f6834e219d62ecbb0de1a190c7e9f6abebd82cb81fa222c2b8f263e139408490029ef52d4bc9a0c59734d08ac5f47daf19e10ed6cb604575b6dca2a76f3",
             "file": "src/app/pages/user-management/user-management.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2065,7 +2095,7 @@
                     ]
                 },
                 {
-                    "name": "hangleProductToDelete",
+                    "name": "hangleUserToDelete",
                     "args": [
                         {
                             "name": "id",
@@ -2145,7 +2175,7 @@
                     "type": "component"
                 },
                 {
-                    "name": "InputFieldComponent",
+                    "name": "SearchInputComponent",
                     "type": "component"
                 },
                 {
@@ -2167,7 +2197,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, OnInit, Signal, ViewChild, computed, effect, inject } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport { patchState } from '@ngrx/signals';\nimport { NgClass } from '@angular/common';\nimport { User, ViewMode } from 'shared/db-models.interface';\nimport { UsersStore } from 'shared/users.store';\nimport { TableComponent } from 'design-system/table/table.component';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { InputFieldComponent } from 'design-system/input-field/input-field.component';\nimport { TilesComponent } from 'design-system/tiles/tiles.component';\nimport { ModalComponent } from 'design-system/modal/modal.component';\n\n@Component({\n  selector: 'user-management-page',\n  standalone: true,\n  imports: [RouterOutlet, TableComponent, AppTitleComponent, InputFieldComponent, IconComponent, NgClass, TilesComponent, ModalComponent],\n  providers: [UsersStore],\n  templateUrl: './user-management.component.html'\n})\nexport class UserManagementComponent {\n  @ViewChild(ModalComponent) modal!: ModalComponent;\n  readonly store = inject(UsersStore);\n  public readonly _filter = computed(() => this.store.filter());\n  public readonly _view = computed(() => this.store.view());\n\n  constructor() {\n    this.store.loadAll()\n  }\n\n  protected filterItems(event: string): void {\n    patchState(this.store, { filter: event })\n  }\n\n  protected changeView(viewMode: ViewMode): void {\n    patchState(this.store, { view: viewMode })\n  }\n\n  protected createItem() {\n    this.modal.openModal();\n  }\n\n  protected updateItem(event: User) {\n    this.modal.openModal(event);\n  }\n\n  protected handleFormSubmit(values: any) {\n    if (!values?.id) {\n      this.store.addUser(values)\n    } else {\n      this.store.updateUser(values)\n    }\n  }\n\n  protected hangleProductToDelete(id: User['id']) {\n    if (window.confirm('Are you sure you want to delete this user')) {\n      this.store.deleteUser(id)\n    }\n  }\n}\n",
+            "sourceCode": "import { Component, OnInit, Signal, ViewChild, computed, effect, inject } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport { patchState } from '@ngrx/signals';\nimport { NgClass } from '@angular/common';\nimport { User, ViewMode } from 'shared/db-models.interface';\nimport { UsersStore } from 'shared/users.store';\nimport { TableComponent } from 'design-system/table/table.component';\nimport { AppTitleComponent } from 'design-system/title/title.component';\nimport { IconComponent } from 'design-system/icon/icon.component';\nimport { SearchInputComponent } from 'design-system/search-input/search-input.component';\nimport { TilesComponent } from 'design-system/tiles/tiles.component';\nimport { ModalComponent } from 'design-system/modal/modal.component';\n\n@Component({\n  selector: 'user-management-page',\n  standalone: true,\n  imports: [RouterOutlet, TableComponent, AppTitleComponent, SearchInputComponent, IconComponent, NgClass, TilesComponent, ModalComponent],\n  providers: [UsersStore],\n  templateUrl: './user-management.component.html'\n})\nexport class UserManagementComponent {\n  @ViewChild(ModalComponent) modal!: ModalComponent;\n  readonly store = inject(UsersStore);\n  public readonly _filter = computed(() => this.store.filter());\n  public readonly _view = computed(() => this.store.view());\n\n  constructor() {\n    this.store.loadAll()\n  }\n\n  protected filterItems(event: string): void {\n    this.store.filterItems(event)\n  }\n\n  protected changeView(viewMode: ViewMode): void {\n    patchState(this.store, { view: viewMode })\n  }\n\n  protected createItem() {\n    this.modal.openModal();\n  }\n\n  protected updateItem(event: User) {\n    this.modal.openModal(event);\n  }\n\n  protected handleFormSubmit(values: any) {\n    if (!values?.id) {\n      this.store.addUser(values)\n    } else {\n      this.store.updateUser(values)\n    }\n  }\n\n  protected hangleUserToDelete(id: User['id']) {\n    if (window.confirm('Are you sure you want to delete this user')) {\n      this.store.deleteUser(id)\n    }\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -2180,7 +2210,7 @@
                 "line": 25
             },
             "extends": [],
-            "templateData": "<div class=\"flex mb-7 items-center gap-3\">\n  <app-title class=\"flex-1\" size=\"large\" content=\"Management tool\" />\n  <button (click)=\"changeView('grid')\">\n    <app-icon\n      name=\"grid_view\"\n      [size]=\"32\"\n      [ngClass]=\"{\n        'fill-app-grey-basic': _view() === 'list',\n        'hover:fill-app-bluish': true,\n        'fill-app-blue': _view() === 'grid' }\"\n      />\n  </button>\n  <button (click)=\"changeView('list')\">\n    <app-icon\n      name=\"list_view\"\n      [size]=\"32\"\n      [ngClass]=\"{\n        'fill-app-grey-basic': _view() === 'grid',\n        'hover:fill-app-bluish': true,\n        'fill-app-blue': _view() === 'list' }\"\n      />\n  </button>\n  <button (click)=\"createItem()\">\n    <app-icon name=\"add\" class=\"fill-app-grey-basic hover:fill-app-bluish\" [size]=\"42\" />\n  </button>\n</div>\n<div class=\"block relative\">\n  <app-input-field id=\"searchbar\" placeholder=\"Find by name...\" class=\"mb-7\" [value]=\"_filter()\" (valueUpdated)=\"filterItems($event)\" prefix=\"search\" />\n</div>\n@if (store.isLoading()) {\n<p>Loading...</p>\n} @else {\n  @if (_view() === 'list') {\n    <app-table [items]=\"store.processedUsers()\" (updateItem)=\"updateItem($event)\"/>\n  } @else {\n    <app-tiles [items]=\"store.processedUsers()\" (updateItem)=\"updateItem($event)\"/>\n  }\n}\n<app-modal (formSubmit)=\"handleFormSubmit($event)\" (productToDelete)=\"hangleProductToDelete($event)\"/>\n"
+            "templateData": "<div class=\"flex mb-7 items-center gap-3\">\n  <app-title class=\"flex-1\" size=\"large\" content=\"User management\" />\n  <button (click)=\"changeView('grid')\" data-testid=\"view-mode-grid\">\n    <app-icon\n      name=\"grid_view\"\n      [size]=\"32\"\n      [ngClass]=\"{\n        'fill-app-grey-basic': _view() === 'list',\n        'hover:fill-app-bluish': true,\n        'fill-app-blue': _view() === 'grid' }\"\n      />\n  </button>\n  <button (click)=\"changeView('list')\" data-testid=\"view-mode-table\">\n    <app-icon\n      name=\"list_view\"\n      [size]=\"32\"\n      [ngClass]=\"{\n        'fill-app-grey-basic': _view() === 'grid',\n        'hover:fill-app-bluish': true,\n        'fill-app-blue': _view() === 'list' }\"\n      />\n  </button>\n  <button (click)=\"createItem()\" data-testid=\"create-user-button\">\n    <app-icon name=\"add\" class=\"fill-app-grey-basic hover:fill-app-bluish\" [size]=\"42\" />\n  </button>\n</div>\n<div class=\"block relative\">\n  <app-search-input id=\"searchbar\" placeholder=\"Find by name...\" class=\"mb-7\" [value]=\"_filter()\" (valueUpdated)=\"filterItems($event)\" prefix=\"search\" />\n</div>\n@if (store.isLoading()) {\n<p>Loading...</p>\n} @else {\n  @if (_view() === 'list') {\n    <app-table [items]=\"store.processedUsers()\" (updateItem)=\"updateItem($event)\"/>\n  } @else {\n    <app-tiles [items]=\"store.processedUsers()\" (updateItem)=\"updateItem($event)\"/>\n  }\n}\n<app-modal (formSubmit)=\"handleFormSubmit($event)\" (productToDelete)=\"hangleUserToDelete($event)\"/>\n"
         }
     ],
     "modules": [],
@@ -2254,7 +2284,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "UsersState",
-                "defaultValue": "{\n  users: [],\n  isLoading: false,\n  error: null,\n  currentPage: 0,\n  usersPerPage: 5,\n  sort: 'asc',\n  sortField: 'name',\n  filter: '',\n  view: 'list'\n}"
+                "defaultValue": "{\n  users: [],\n  isLoading: false,\n  error: null,\n  currentPage: 0,\n  usersPerPage: 5,\n  sortDirection: 'asc',\n  sortField: 'name',\n  filter: '',\n  view: 'list'\n}"
             },
             {
                 "name": "Large",
@@ -2270,11 +2300,11 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "file": "src/design-system/search-input/search-input.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<InputFieldComponent>",
-                "defaultValue": "{\n  title: 'Design System/Input field',\n  component: InputFieldComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    value: {\n      control: 'text',\n    },\n    prefix: {\n      control: 'inline-radio',\n      options: ICONS\n    }\n  },\n  args: {\n    id: 'input'\n  }\n}"
+                "type": "Meta<SearchInputComponent>",
+                "defaultValue": "{\n  title: 'Design System/Search input',\n  component: SearchInputComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    value: {\n      control: 'text',\n    },\n    prefix: {\n      control: 'inline-radio',\n      options: ICONS\n    }\n  },\n  args: {\n    id: 'input',\n    valueUpdated: fn()\n  },\n  parameters: {\n    controls: { exclude: ['value', 'valueUpdated', 'valueUpdatedEvent']}\n  }\n}"
             },
             {
                 "name": "meta",
@@ -2310,21 +2340,21 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/design-system/table/row/table-row.stories.tsx",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<TableRowComponent>",
-                "defaultValue": "{\n  title: 'Design System/Table/Row',\n  component: TableRowComponent,\n  tags: ['autodocs']\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<TablePaginatorComponent>",
                 "defaultValue": "{\n  title: 'Design System/Table/Paginator',\n  component: TablePaginatorComponent,\n  tags: ['autodocs'],\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/row/table-row.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TableRowComponent>",
+                "defaultValue": "{\n  title: 'Design System/Table/Row',\n  component: TableRowComponent,\n  tags: ['autodocs']\n}"
             },
             {
                 "name": "meta",
@@ -2357,6 +2387,26 @@
                 "defaultValue": "{\n  args: {\n    size: 'small',\n    content: 'Small title test'\n  },\n}"
             },
             {
+                "name": "sortedValues",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/shared/utils.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "(a: User, b: User, direction: UsersState['sortDirection'], field: UsersState['sortField']): number => {\n  const [valA, valB] = [a[field], b[field]];\n  if (typeof valA === 'string' && typeof valB === 'string') {\n    return direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);\n  } else if (valA && valB) {\n    return direction === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);\n  } else return -1;\n}"
+            },
+            {
+                "name": "updatedCurrentPage",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/shared/utils.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "(oldCount: number, newCount: number, currentPage: number): number => Math.floor(oldCount * currentPage / newCount)"
+            },
+            {
                 "name": "usersMock",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -2374,7 +2424,27 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
-                "defaultValue": "signalStore(\n  { providedIn: 'root'},\n  withState(initialState),\n  withComputed(({ users, filter, sort, currentPage, usersPerPage, sortField }) => ({\n    processedUsers: computed(() => {\n      return users()\n      .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))\n      .sort((a, b) => {\n        const [valA, valB] = [a[sortField()], b[sortField()]];\n        if (typeof valA === 'string' && typeof valB === 'string') {\n          return sort() === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);\n        } else if (valA && valB) {\n          return sort() === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);\n        } else return -1;\n      })\n      .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())\n    }),\n  })),\n  withMethods((store, httpService = inject(HttpService)) => ({\n    loadAll() {\n      patchState(store, { isLoading: true });\n      httpService.getUsers().subscribe({\n        next: (users) => {\n          patchState(store, { users, isLoading: false });\n        },\n        error: (error) => patchState(store, { error, isLoading: false })\n      })\n    },\n    addUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.concat(user), isLoading: false }));\n    },\n    updateUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i), isLoading: false }));\n    },\n    deleteUser(id: User['id']) {\n      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id), isLoading: false }));\n    }\n  }))\n)"
+                "defaultValue": "signalStore(\n  { providedIn: 'root'},\n  withState(initialState),\n  withComputed(({ users, filter, sortDirection, currentPage, usersPerPage, sortField }) => ({\n    processedUsers: computed(() => {\n      return users()\n      .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))\n      .sort((a, b) => sortedValues(a, b, sortDirection(), sortField()))\n      .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())\n    }),\n  })),\n  withMethods((store, httpService = inject(HttpService)) => ({\n    updatePerPageCount(numberOfItems: number) {\n      patchState(store, { usersPerPage: numberOfItems, currentPage: updatedCurrentPage(store.usersPerPage(), numberOfItems, store.currentPage()) })\n    },\n    filterItems(filterby: string) {\n      patchState(store, { filter: filterby, currentPage: 0 })\n    },\n    loadAll() {\n      patchState(store, { isLoading: true });\n      httpService.getUsers().subscribe({\n        next: (users) => {\n          patchState(store, { users, isLoading: false });\n        },\n        error: (error) => patchState(store, { error, isLoading: false })\n      })\n    },\n    addUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.concat({...user, id: UUID(store.users()) }) }));\n    },\n    updateUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i) }));\n    },\n    deleteUser(id: User['id']) {\n      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id) }));\n    }\n  }))\n)"
+            },
+            {
+                "name": "UUID",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/shared/utils.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "(users: User[]) => Math.max(...users.map(user => user.id).map(Number)) + 1"
+            },
+            {
+                "name": "validUser",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/user-management/user-management.component.test.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "User",
+                "defaultValue": "{\n  name: 'John Smith',\n  email: 'johnsmith@gmail.com',\n  phone: '+972555555555',\n  website: 'google.com'\n}"
             },
             {
                 "name": "Variant",
@@ -2384,13 +2454,13 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    name: 'first_page',\n    size: 32,\n    color: '#ff8300'\n  }\n} satisfies Story"
+                "defaultValue": "{\n  args: {\n    name: 'first_page',\n    size: 32\n  }\n} satisfies Story"
             },
             {
                 "name": "Variant",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "file": "src/design-system/search-input/search-input.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
@@ -2420,21 +2490,21 @@
                 "name": "Variant",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/design-system/table/row/table-row.stories.tsx",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
-            },
-            {
-                "name": "Variant",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{}"
+            },
+            {
+                "name": "Variant",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/table/row/table-row.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
             },
             {
                 "name": "Variant",
@@ -2457,10 +2527,20 @@
                 "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
             },
             {
+                "name": "VariantWithCustomColor",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/design-system/icon/icon.stories.tsx",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    name: 'first_page',\n    size: 32,\n    color: '#ff8300'\n  }\n} satisfies Story"
+            },
+            {
                 "name": "VariantWithIconAndPlaceholder",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "file": "src/design-system/search-input/search-input.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
@@ -2495,8 +2575,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<InputFieldComponent>",
-                "file": "src/design-system/input-field/input-field.stories.tsx",
+                "rawtype": "StoryObj<SearchInputComponent>",
+                "file": "src/design-system/search-input/search-input.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -2539,8 +2619,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<TableRowComponent>",
-                "file": "src/design-system/table/row/table-row.stories.tsx",
+                "rawtype": "StoryObj<TablePaginatorComponent>",
+                "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -2550,8 +2630,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<TablePaginatorComponent>",
-                "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                "rawtype": "StoryObj<TableRowComponent>",
+                "file": "src/design-system/table/row/table-row.stories.tsx",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -2584,7 +2664,7 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "rawtype": "literal type",
-                "file": "src/shared/users.store.ts",
+                "file": "src/shared/db-models.interface.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -2681,7 +2761,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "UsersState",
-                    "defaultValue": "{\n  users: [],\n  isLoading: false,\n  error: null,\n  currentPage: 0,\n  usersPerPage: 5,\n  sort: 'asc',\n  sortField: 'name',\n  filter: '',\n  view: 'list'\n}"
+                    "defaultValue": "{\n  users: [],\n  isLoading: false,\n  error: null,\n  currentPage: 0,\n  usersPerPage: 5,\n  sortDirection: 'asc',\n  sortField: 'name',\n  filter: '',\n  view: 'list'\n}"
                 },
                 {
                     "name": "UsersStore",
@@ -2691,7 +2771,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
-                    "defaultValue": "signalStore(\n  { providedIn: 'root'},\n  withState(initialState),\n  withComputed(({ users, filter, sort, currentPage, usersPerPage, sortField }) => ({\n    processedUsers: computed(() => {\n      return users()\n      .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))\n      .sort((a, b) => {\n        const [valA, valB] = [a[sortField()], b[sortField()]];\n        if (typeof valA === 'string' && typeof valB === 'string') {\n          return sort() === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);\n        } else if (valA && valB) {\n          return sort() === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);\n        } else return -1;\n      })\n      .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())\n    }),\n  })),\n  withMethods((store, httpService = inject(HttpService)) => ({\n    loadAll() {\n      patchState(store, { isLoading: true });\n      httpService.getUsers().subscribe({\n        next: (users) => {\n          patchState(store, { users, isLoading: false });\n        },\n        error: (error) => patchState(store, { error, isLoading: false })\n      })\n    },\n    addUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.concat(user), isLoading: false }));\n    },\n    updateUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i), isLoading: false }));\n    },\n    deleteUser(id: User['id']) {\n      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id), isLoading: false }));\n    }\n  }))\n)"
+                    "defaultValue": "signalStore(\n  { providedIn: 'root'},\n  withState(initialState),\n  withComputed(({ users, filter, sortDirection, currentPage, usersPerPage, sortField }) => ({\n    processedUsers: computed(() => {\n      return users()\n      .filter(el => el.name.toLowerCase().includes(filter().toLowerCase()))\n      .sort((a, b) => sortedValues(a, b, sortDirection(), sortField()))\n      .slice(currentPage() * usersPerPage(), (currentPage() + 1) * usersPerPage())\n    }),\n  })),\n  withMethods((store, httpService = inject(HttpService)) => ({\n    updatePerPageCount(numberOfItems: number) {\n      patchState(store, { usersPerPage: numberOfItems, currentPage: updatedCurrentPage(store.usersPerPage(), numberOfItems, store.currentPage()) })\n    },\n    filterItems(filterby: string) {\n      patchState(store, { filter: filterby, currentPage: 0 })\n    },\n    loadAll() {\n      patchState(store, { isLoading: true });\n      httpService.getUsers().subscribe({\n        next: (users) => {\n          patchState(store, { users, isLoading: false });\n        },\n        error: (error) => patchState(store, { error, isLoading: false })\n      })\n    },\n    addUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.concat({...user, id: UUID(store.users()) }) }));\n    },\n    updateUser(user: User) {\n      patchState(store, (state) => ({ users: state.users.map(i => user.id === i.id ? user : i) }));\n    },\n    deleteUser(id: User['id']) {\n      patchState(store, (state) => ({ users: state.users.filter(prod => prod.id !== id) }));\n    }\n  }))\n)"
                 }
             ],
             "src/design-system/title/title.stories.tsx": [
@@ -2726,22 +2806,22 @@
                     "defaultValue": "{\n  args: {\n    size: 'small',\n    content: 'Small title test'\n  },\n}"
                 }
             ],
-            "src/design-system/input-field/input-field.stories.tsx": [
+            "src/design-system/search-input/search-input.stories.tsx": [
                 {
                     "name": "meta",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "file": "src/design-system/search-input/search-input.stories.tsx",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Meta<InputFieldComponent>",
-                    "defaultValue": "{\n  title: 'Design System/Input field',\n  component: InputFieldComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    value: {\n      control: 'text',\n    },\n    prefix: {\n      control: 'inline-radio',\n      options: ICONS\n    }\n  },\n  args: {\n    id: 'input'\n  }\n}"
+                    "type": "Meta<SearchInputComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Search input',\n  component: SearchInputComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    value: {\n      control: 'text',\n    },\n    prefix: {\n      control: 'inline-radio',\n      options: ICONS\n    }\n  },\n  args: {\n    id: 'input',\n    valueUpdated: fn()\n  },\n  parameters: {\n    controls: { exclude: ['value', 'valueUpdated', 'valueUpdatedEvent']}\n  }\n}"
                 },
                 {
                     "name": "Variant",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "file": "src/design-system/search-input/search-input.stories.tsx",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
@@ -2751,7 +2831,7 @@
                     "name": "VariantWithIconAndPlaceholder",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "file": "src/design-system/search-input/search-input.stories.tsx",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
@@ -2802,28 +2882,6 @@
                     "defaultValue": "{\n  args: { items: usersMock },\n}"
                 }
             ],
-            "src/design-system/table/row/table-row.stories.tsx": [
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/design-system/table/row/table-row.stories.tsx",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<TableRowComponent>",
-                    "defaultValue": "{\n  title: 'Design System/Table/Row',\n  component: TableRowComponent,\n  tags: ['autodocs']\n}"
-                },
-                {
-                    "name": "Variant",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/design-system/table/row/table-row.stories.tsx",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
-                }
-            ],
             "src/design-system/table/paginator/table-paginator.stories.tsx": [
                 {
                     "name": "meta",
@@ -2844,6 +2902,28 @@
                     "deprecationMessage": "",
                     "type": "Story",
                     "defaultValue": "{}"
+                }
+            ],
+            "src/design-system/table/row/table-row.stories.tsx": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/row/table-row.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<TableRowComponent>",
+                    "defaultValue": "{\n  title: 'Design System/Table/Row',\n  component: TableRowComponent,\n  tags: ['autodocs']\n}"
+                },
+                {
+                    "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/table/row/table-row.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
                 }
             ],
             "src/design-system/table/header/table-header.stories.tsx": [
@@ -2890,6 +2970,38 @@
                     "defaultValue": "{\n  args: {\n    item: usersMock[0],\n  },\n}"
                 }
             ],
+            "src/shared/utils.ts": [
+                {
+                    "name": "sortedValues",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/shared/utils.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "(a: User, b: User, direction: UsersState['sortDirection'], field: UsersState['sortField']): number => {\n  const [valA, valB] = [a[field], b[field]];\n  if (typeof valA === 'string' && typeof valB === 'string') {\n    return direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);\n  } else if (valA && valB) {\n    return direction === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);\n  } else return -1;\n}"
+                },
+                {
+                    "name": "updatedCurrentPage",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/shared/utils.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "(oldCount: number, newCount: number, currentPage: number): number => Math.floor(oldCount * currentPage / newCount)"
+                },
+                {
+                    "name": "UUID",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/shared/utils.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "(users: User[]) => Math.max(...users.map(user => user.id).map(Number)) + 1"
+                }
+            ],
             "src/shared/users-mock.ts": [
                 {
                     "name": "usersMock",
@@ -2902,9 +3014,31 @@
                     "defaultValue": "[\n  {\n    id: 1,\n    name: \"Leanne Graham\",\n    username: \"Bret\",\n    email: \"Sincere@april.biz\",\n    address: {\n      street: \"Kulas Light\",\n      suite: \"Apt. 556\",\n      city: \"Gwenborough\",\n      zipcode: \"92998-3874\",\n      geo: {\n        lat: \"-37.3159\",\n        lng: \"81.1496\"\n      }\n    },\n    phone: \"1-770-736-8031 x56442\",\n    website: \"hildegard.org\",\n    company: {\n      name: \"Romaguera-Crona\",\n      catchPhrase: \"Multi-layered client-server neural-net\",\n      bs: \"harness real-time e-markets\"\n    }\n  },\n  {\n    id: 2,\n    name: \"Ervin Howell\",\n    username: \"Antonette\",\n    email: \"Shanna@melissa.tv\",\n    address: {\n      street: \"Victor Plains\",\n      suite: \"Suite 879\",\n      city: \"Wisokyburgh\",\n      zipcode: \"90566-7771\",\n      geo: {\n        lat: \"-43.9509\",\n        lng: \"-34.4618\"\n      }\n    },\n    phone: \"010-692-6593 x09125\",\n    website: \"anastasia.net\",\n    company: {\n      name: \"Deckow-Crist\",\n      catchPhrase: \"Proactive didactic contingency\",\n      bs: \"synergize scalable supply-chains\"\n    }\n  },\n  {\n    id: 3,\n    name: \"Clementine Bauch\",\n    username: \"Samantha\",\n    email: \"Nathan@yesenia.net\",\n    address: {\n      street: \"Douglas Extension\",\n      suite: \"Suite 847\",\n      city: \"McKenziehaven\",\n      zipcode: \"59590-4157\",\n      geo: {\n        lat: \"-68.6102\",\n        lng: \"-47.0653\"\n      }\n    },\n    phone: \"1-463-123-4447\",\n    website: \"ramiro.info\",\n    company: {\n      name: \"Romaguera-Jacobson\",\n      catchPhrase: \"Face to face bifurcated interface\",\n      bs: \"e-enable strategic applications\"\n    }\n  },\n  {\n    id: 4,\n    name: \"Patricia Lebsack\",\n    username: \"Karianne\",\n    email: \"Julianne.OConner@kory.org\",\n    address: {\n      street: \"Hoeger Mall\",\n      suite: \"Apt. 692\",\n      city: \"South Elvis\",\n      zipcode: \"53919-4257\",\n      geo: {\n        lat: \"29.4572\",\n        lng: \"-164.2990\"\n      }\n    },\n    phone: \"493-170-9623 x156\",\n    website: \"kale.biz\",\n    company: {\n      name: \"Robel-Corkery\",\n      catchPhrase: \"Multi-tiered zero tolerance productivity\",\n      bs: \"transition cutting-edge web services\"\n    }\n  },\n  {\n    id: 5,\n    name: \"Chelsey Dietrich\",\n    username: \"Kamren\",\n    email: \"Lucio_Hettinger@annie.ca\",\n    address: {\n      street: \"Skiles Walks\",\n      suite: \"Suite 351\",\n      city: \"Roscoeview\",\n      zipcode: \"33263\",\n      geo: {\n        lat: \"-31.8129\",\n        lng: \"62.5342\"\n      }\n    },\n    phone: \"(254)954-1289\",\n    website: \"demarco.info\",\n    company: {\n      name: \"Keebler LLC\",\n      catchPhrase: \"User-centric fault-tolerant solution\",\n      bs: \"revolutionize end-to-end systems\"\n    }\n  },\n  {\n    id: 6,\n    name: \"Mrs. Dennis Schulist\",\n    username: \"Leopoldo_Corkery\",\n    email: \"Karley_Dach@jasper.info\",\n    address: {\n      street: \"Norberto Crossing\",\n      suite: \"Apt. 950\",\n      city: \"South Christy\",\n      zipcode: \"23505-1337\",\n      geo: {\n        lat: \"-71.4197\",\n        lng: \"71.7478\"\n      }\n    },\n    phone: \"1-477-935-8478 x6430\",\n    website: \"ola.org\",\n    company: {\n      name: \"Considine-Lockman\",\n      catchPhrase: \"Synchronised bottom-line interface\",\n      bs: \"e-enable innovative applications\"\n    }\n  },\n  {\n    id: 7,\n    name: \"Kurtis Weissnat\",\n    username: \"Elwyn.Skiles\",\n    email: \"Telly.Hoeger@billy.biz\",\n    address: {\n      street: \"Rex Trail\",\n      suite: \"Suite 280\",\n      city: \"Howemouth\",\n      zipcode: \"58804-1099\",\n      geo: {\n        lat: \"24.8918\",\n        lng: \"21.8984\"\n      }\n    },\n    phone: \"210.067.6132\",\n    website: \"elvis.io\",\n    company: {\n      name: \"Johns Group\",\n      catchPhrase: \"Configurable multimedia task-force\",\n      bs: \"generate enterprise e-tailers\"\n    }\n  },\n  {\n    id: 8,\n    name: \"Nicholas Runolfsdottir V\",\n    username: \"Maxime_Nienow\",\n    email: \"Sherwood@rosamond.me\",\n    address: {\n      street: \"Ellsworth Summit\",\n      suite: \"Suite 729\",\n      city: \"Aliyaview\",\n      zipcode: \"45169\",\n      geo: {\n        lat: \"-14.3990\",\n        lng: \"-120.7677\"\n      }\n    },\n    phone: \"586.493.6943 x140\",\n    website: \"jacynthe.com\",\n    company: {\n      name: \"Abernathy Group\",\n      catchPhrase: \"Implemented secondary concept\",\n      bs: \"e-enable extensible e-tailers\"\n    }\n  },\n  {\n    id: 9,\n    name: \"Glenna Reichert\",\n    username: \"Delphine\",\n    email: \"Chaim_McDermott@dana.io\",\n    address: {\n      street: \"Dayna Park\",\n      suite: \"Suite 449\",\n      city: \"Bartholomebury\",\n      zipcode: \"76495-3109\",\n      geo: {\n        lat: \"24.6463\",\n        lng: \"-168.8889\"\n      }\n    },\n    phone: \"(775)976-6794 x41206\",\n    website: \"conrad.com\",\n    company: {\n      name: \"Yost and Sons\",\n      catchPhrase: \"Switchable contextually-based project\",\n      bs: \"aggregate real-time technologies\"\n    }\n  },\n  {\n    id: 10,\n    name: \"Clementina DuBuque\",\n    username: \"Moriah.Stanton\",\n    email: \"Rey.Padberg@karina.biz\",\n    address: {\n      street: \"Kattie Turnpike\",\n      suite: \"Suite 198\",\n      city: \"Lebsackbury\",\n      zipcode: \"31428-2261\",\n      geo: {\n        lat: \"-38.2386\",\n        lng: \"57.2232\"\n      }\n    },\n    phone: \"024-648-3804\",\n    website: \"ambrose.net\",\n    company: {\n      name: \"Hoeger LLC\",\n      catchPhrase: \"Centralized empowering task-force\",\n      bs: \"target end-to-end models\"\n    }\n  }\n]"
                 }
             ],
+            "src/app/pages/user-management/user-management.component.test.ts": [
+                {
+                    "name": "validUser",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/user-management/user-management.component.test.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User",
+                    "defaultValue": "{\n  name: 'John Smith',\n  email: 'johnsmith@gmail.com',\n  phone: '+972555555555',\n  website: 'google.com'\n}"
+                }
+            ],
             "src/design-system/icon/icon.stories.tsx": [
                 {
                     "name": "Variant",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/design-system/icon/icon.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    name: 'first_page',\n    size: 32\n  }\n} satisfies Story"
+                },
+                {
+                    "name": "VariantWithCustomColor",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
                     "file": "src/design-system/icon/icon.stories.tsx",
@@ -2944,13 +3078,13 @@
                     "kind": 183
                 }
             ],
-            "src/design-system/input-field/input-field.stories.tsx": [
+            "src/design-system/search-input/search-input.stories.tsx": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
-                    "rawtype": "StoryObj<InputFieldComponent>",
-                    "file": "src/design-system/input-field/input-field.stories.tsx",
+                    "rawtype": "StoryObj<SearchInputComponent>",
+                    "file": "src/design-system/search-input/search-input.stories.tsx",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",
@@ -2996,19 +3130,6 @@
                     "kind": 183
                 }
             ],
-            "src/design-system/table/row/table-row.stories.tsx": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "rawtype": "StoryObj<TableRowComponent>",
-                    "file": "src/design-system/table/row/table-row.stories.tsx",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "description": "",
-                    "kind": 183
-                }
-            ],
             "src/design-system/table/paginator/table-paginator.stories.tsx": [
                 {
                     "name": "Story",
@@ -3016,6 +3137,19 @@
                     "subtype": "typealias",
                     "rawtype": "StoryObj<TablePaginatorComponent>",
                     "file": "src/design-system/table/paginator/table-paginator.stories.tsx",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/design-system/table/row/table-row.stories.tsx": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<TableRowComponent>",
+                    "file": "src/design-system/table/row/table-row.stories.tsx",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",
@@ -3048,20 +3182,18 @@
                     "kind": 183
                 }
             ],
-            "src/shared/users.store.ts": [
+            "src/shared/db-models.interface.ts": [
                 {
                     "name": "UsersState",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "rawtype": "literal type",
-                    "file": "src/shared/users.store.ts",
+                    "file": "src/shared/db-models.interface.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",
                     "kind": 187
-                }
-            ],
-            "src/shared/db-models.interface.ts": [
+                },
                 {
                     "name": "ViewMode",
                     "ctype": "miscellaneous",
@@ -3101,6 +3233,16 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/pages/user-management/user-management.component.test.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "validUser",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/pages/user-management/user-management.component.ts",
                 "type": "component",
                 "linktype": "component",
@@ -3115,7 +3257,7 @@
                 "linktype": "component",
                 "name": "ButtonComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/8",
+                "coverageCount": "0/9",
                 "status": "low"
             },
             {
@@ -3124,7 +3266,7 @@
                 "linktype": "interface",
                 "name": "Button",
                 "coveragePercent": 0,
-                "coverageCount": "0/5",
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -3186,59 +3328,21 @@
                 "status": "low"
             },
             {
+                "filePath": "src/design-system/icon/icon.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "VariantWithCustomColor",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/design-system/icon/icons-collection.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "ICONS_PATHS",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/design-system/input-field/input-field.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "InputFieldComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/7",
-                "status": "low"
-            },
-            {
-                "filePath": "src/design-system/input-field/input-field.component.ts",
-                "type": "interface",
-                "linktype": "interface",
-                "name": "InputField",
-                "coveragePercent": 0,
-                "coverageCount": "0/6",
-                "status": "low"
-            },
-            {
-                "filePath": "src/design-system/input-field/input-field.stories.tsx",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "meta",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/design-system/input-field/input-field.stories.tsx",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "Variant",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/design-system/input-field/input-field.stories.tsx",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "VariantWithIconAndPlaceholder",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -3267,6 +3371,54 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "initialItem",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/search-input/search-input.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "SearchInputComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/search-input/search-input.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "SearchInput",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/search-input/search-input.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/search-input/search-input.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Variant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/design-system/search-input/search-input.stories.tsx",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "VariantWithIconAndPlaceholder",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -3573,6 +3725,36 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "UsersStore",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/utils.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "sortedValues",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/utils.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "updatedCurrentPage",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/shared/utils.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "UUID",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"

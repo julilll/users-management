@@ -11,21 +11,25 @@ export default {
   argTypes: {
     color: {
       control: 'inline-radio',
-      options: ['green', 'red']
+      options: ['green', 'red'],
+      description: 'Two options provided'
     },
     content: {
       control: 'text',
+      description: 'Text written in the button'
     },
     icon: {
       control: 'inline-radio',
-      options: ICONS
+      options: ICONS,
+      description: 'Icon provided'
     },
     disabled: {
-      control: 'boolean'
+      control: 'boolean',
+      description: 'Design for disabled solution'
     }
   },
   parameters: {
-    controls: { exclude: ['paths']}
+    controls: { exclude: ['_color', 'type', 'buttonClasses', 'iconClasses']}
   }
 } satisfies Meta<ButtonComponent>;
 
@@ -41,5 +45,21 @@ export const VariantWithIcon: Story = {
     color: 'green',
     content: 'Save',
     icon: 'save'
+  }
+} satisfies Story;
+
+export const VariantOnlyIcon: Story = {
+  args: {
+    color: 'green',
+    icon: 'save'
+  }
+} satisfies Story;
+
+export const VariantWithIconAndDisabled: Story = {
+  args: {
+    color: 'green',
+    content: 'Save',
+    icon: 'save',
+    disabled: true
   }
 } satisfies Story;
